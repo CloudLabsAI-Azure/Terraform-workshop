@@ -123,8 +123,8 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    ```
 
    Key points:
-   - `data.azuread_user.lab04_user.object_id` — in AzureAD provider v2.x the attribute is `.object_id`, not `.id`.
-   - `secret_permissions` values are **title-cased** in AzureRM 4.x (`"Get"`, `"Set"`, etc.).
+   - `data.azuread_user.lab04_user.object_id` references the user's unique ID in Entra ID.
+   - `secret_permissions` values are **title-cased** (`"Get"`, `"Set"`, etc.).
    - `random_password` (not `random_string`) ensures the result is marked sensitive and never printed in logs.
    - `depends_on` ensures the access policy exists before the secret is written.
 

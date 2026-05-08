@@ -48,7 +48,7 @@ In this task you will install the required tools and open the working folder whe
 
 In this task you create `provider.tf`, which tells Terraform which cloud provider plugin to download and use. The **azurerm** provider is the official HashiCorp plugin for Microsoft Azure.
 
-> **Note:** As of AzureRM provider v4.x the `features {}` block is **required** and the legacy inline `version` argument inside the `provider` block is replaced by the `required_providers` block inside a `terraform` block.
+> **Note:** The `features {}` block is **required** by the AzureRM provider. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
 
 1. In VS Code, create a new file named **`provider.tf`** in your lab folder.
 
@@ -71,9 +71,9 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
    ```
 
    Key points:
-   - `required_providers` pins the AzureRM provider to a **4.x** release.
+   - `required_providers` pins the AzureRM provider version.
    - `required_version` ensures Terraform CLI is at least 1.9.
-   - `features {}` is mandatory in AzureRM 4.x.
+   - `features {}` is mandatory — always include it even if empty.
 
 ---
 
@@ -139,8 +139,8 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
    ```
 
    Key points:
-   - In AzureRM 4.x, subnets must be declared as **separate `azurerm_subnet` resources** — the inline `subnet` block inside `azurerm_virtual_network` has been removed.
-   - `address_prefixes` (plural, list) replaces the old `address_prefix` (singular string).
+   - Subnets are declared as **separate `azurerm_subnet` resources** rather than inline blocks — this makes them independently referenceable.
+   - `address_prefixes` accepts a list of CIDR ranges.
    - `azurerm_virtual_network.predayvnet.name` is a Terraform **expression** that creates an implicit dependency — Terraform will always create the VNet before the Subnet.
 
 ---
