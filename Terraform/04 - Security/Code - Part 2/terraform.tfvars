@@ -1,33 +1,42 @@
-rg = "<<<NAME OF YOUR ASSIGNED RESOURCE GROUP>>>" ## Enter the resource group pre-created in your lab
-location = "<<<REGION OF YOUR ASSIGNED RESOURCE GROUP>>>" ## Enter the azure region for your resources
+rg       = ""  # Enter your target resource group name
+location = ""  # Enter your Azure region (e.g. "eastus", "westeurope")
+
 security_group_rules = [
-      {
-          name                  = "http"
-          priority              = 100
-          protocol              = "tcp"
-          destinationPortRange  = "80"
-          direction             = "Inbound"
-          access                = "Allow"
-      },
-      {
-          name                  = "https"
-          priority              = 150
-          protocol              = "tcp"
-          destinationPortRange  = "443"
-          direction             = "Inbound"
-          access                = "Allow"
-      },
-      {
-          name                  = "deny-the-rest"
-          priority              = 200
-          protocol              = "*"
-          destinationPortRange  = "0-65535"
-          direction             = "Inbound"
-          access                = "Deny"
-      },
-  ]
+  {
+    name                 = "http"
+    priority             = 100
+    protocol             = "tcp"
+    destinationPortRange = "80"
+    direction            = "Inbound"
+    access               = "Allow"
+  },
+  {
+    name                 = "https"
+    priority             = 150
+    protocol             = "tcp"
+    destinationPortRange = "443"
+    direction            = "Inbound"
+    access               = "Allow"
+  },
+  {
+    name                 = "deny-the-rest"
+    priority             = 200
+    protocol             = "*"
+    destinationPortRange = "0-65535"
+    direction            = "Inbound"
+    access               = "Deny"
+  },
+]
+
 secret_id = "lab04admin"
-key_vault = "" ## Enter the name of the pre-created key vault instance
+key_vault = ""  # Enter the pre-created Key Vault name
+rg2       = ""  # Enter the resource group where Key Vault exists
+
+tags = {
+  environment = "lab"
+  workshop    = "IaC-with-Terraform"
+  year        = "2026"
+}
 rg2 = "" ## Enter the name of the resource group where key vault exists
 tags = {
     event           = "Ignite"

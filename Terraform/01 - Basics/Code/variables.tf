@@ -7,9 +7,3 @@ variable "location" {
   type        = string
   description = "Azure region where resources will be deployed (e.g. eastus, westeurope)."
 }
-
-variable "admin_password" {
-  type        = string
-  description = "Administrator password for the virtual machine (min 12 characters)."
-  sensitive   = true
-}

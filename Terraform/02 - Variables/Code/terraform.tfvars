@@ -1,2 +1,3 @@
-rg = "<<<NAME OF YOUR ASSIGNED RESOURCE GROUP>>>" ## Enter the resource group pre-created in your lab
-location = "<<<REGION OF YOUR ASSIGNED RESOURCE GROUP>>>" ## Enter the azure region for your resources
+rg             = ""  # Enter your resource group name (e.g. "my-lab-rg")
+location       = ""  # Enter your Azure region       (e.g. "eastus", "westeurope")
+admin_password = ""  # Set a strong VM admin password (min 12 chars, e.g. "P@ssw0rd123!")

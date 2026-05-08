@@ -1,63 +1,71 @@
-# Challenges
+﻿# Challenges
 
-The final hands on part of the the pre-day consists of two challenges where you will pick 2 of the 4 challenges. You have 1 hr for each challenge and will be scored based on the requirements that you are able to implement and provision. You man choose any of the tools or any combination thereof to accomplish your chosen challenge.
+The final hands-on part of the workshop consists of two challenges. Pick **2 of the 4** challenges below. You have **1 hour per challenge** and will be scored based on the requirements you successfully implement and provision. You may use any tool or combination of tools (Terraform, Azure CLI, Bicep, etc.) to accomplish your chosen challenge.
 
-As they have been with the labs, our proctors are here to help so feel free to flag one of us down if you get stuck or have questions.
+Proctors are available to help — flag one down if you get stuck or have questions.
 
-Once you have completed your challenge, please flag down one of the proctors who will check your work and record your score.
+Once you have completed a challenge, flag down a proctor who will verify your work and record your score.
 
-At the end of the day, the person(s) with the most points will be win a fabulous prize!
-> In case of a tie we will raffle amongst the top scorers
+At the end of the day, the participant(s) with the most points win a prize!
+> In the event of a tie, a raffle will be held among the top scorers.
 
-## Securely provision Azure Kuberenets cluster
+---
 
-For this challenge, you will provision an [Azure Kubernetes](https://docs.microsoft.com/en-us/azure/aks/) (AKS) Cluster that meets the following requirements.
+## Challenge 1: Securely provision an Azure Kubernetes Service cluster
 
-| Requirement                                                                   | Points |
-|:------------------------------------------------------------------------------|:------:|
-| Kuberenetes Cluster with auto scaling Linux nodes                             |   30   |
-| Connect to custom / existing VNet                                             |   20   |
-| Enable Container monitoring with Log Analytics                                |   30   |
-| Connect to Azure Container Instances (ACI) for burstability                   |   20   |
+Provision an [Azure Kubernetes Service (AKS)](https://learn.microsoft.com/azure/aks/intro-kubernetes) cluster that meets the following requirements.
 
-> **NOTE** All secrets must be securely stored and referenced (i.e. nothing in plain text)
+| Requirement | Points |
+|:---|:---:|
+| AKS cluster with cluster autoscaler enabled on Linux node pool | 30 |
+| Attach cluster to an existing or custom VNet | 20 |
+| Enable Container Insights monitoring with a Log Analytics workspace | 30 |
+| Enable the ACI virtual node add-on for burst capacity | 20 |
 
-## Web App with CosmoDB backend
+> **Note:** All secrets (service principal credentials, etc.) must be stored in Azure Key Vault and referenced at runtime — no credentials in plain text.
 
-For this challenge, you will provision an [Azure WebApp](https://docs.microsoft.com/en-us/azure/app-service/) and a [Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction) that meets the following requirements.
+---
 
-| Requirement                                                                                       | Points |
-|:--------------------------------------------------------------------------------------------------|:------:|
-| Cosmos DB using the MongoDb API                                                                   |   20   |
-| Azure Web App (App Service)for NodeJS with System Assigned identity, storage for application logs |   30   |
-| Enable monitoring of app & cosmos with Log Analytics                                              |   25   |
-| Connect WebApp and Cosmos DB using VNet                                                           |   25   |
+## Challenge 2: Web App with Cosmos DB backend
 
-> **NOTE** All secrets must be securely stored and referenced (i.e. nothing in plain text)
+Provision an [Azure App Service Web App](https://learn.microsoft.com/azure/app-service/overview) and an [Azure Cosmos DB](https://learn.microsoft.com/azure/cosmos-db/introduction) account that meet the following requirements.
 
-## Provision VMSS with image from Shared Image Gallery
+| Requirement | Points |
+|:---|:---:|
+| Cosmos DB account using the MongoDB API | 20 |
+| App Service plan (Linux) with a Node.js web app, system-assigned managed identity, and diagnostic logs sent to a Storage Account | 30 |
+| Enable Application Insights and Cosmos DB monitoring via a Log Analytics workspace | 25 |
+| Connect the Web App and Cosmos DB over a VNet using VNet Integration and Private Endpoint | 25 |
 
-For this challenge, you will provision an create a [VMSS](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview) (SIG) from an image that is stored in the [Shared Image Gallery](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/shared-image-galleries) (SIG) that meets the following requirements.
+> **Note:** All secrets must be stored in Azure Key Vault and referenced via Key Vault references or managed identity — no credentials in plain text.
 
-| Requirement                                                                   | Points |
-|:------------------------------------------------------------------------------|:------:|
-| Shared Image Gallery with image to be used by VMSS                            |   30   |
-| VMSS with 3 instances using SIG image plus a managed data disk                |   30   |
-| Use Rolling upgrade policy in VMSS                                            |   40   |
+---
 
-> **NOTE** All secrets must be securely stored and referenced (i.e. nothing in plain text)
+## Challenge 3: VM Scale Set from an Azure Compute Gallery image
 
-## Pipeline for IaC
+Provision a [Virtual Machine Scale Set (VMSS)](https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview) using an image stored in an [Azure Compute Gallery](https://learn.microsoft.com/azure/virtual-machines/shared-image-galleries) (formerly Shared Image Gallery) that meets the following requirements.
 
-For this challenge, you will provision an create a pipeline that will build and provision code from the Hands on Labs or a previous challeng. You can use the Azure DevOps environement that has been provisioned as part of this lab environment, GitHub Actions or Jenkins for your pipeline.  The pipeline must meet the following requirements.
+| Requirement | Points |
+|:---|:---:|
+| Azure Compute Gallery with an image definition and image version | 30 |
+| VMSS with 3 instances using the gallery image, plus a managed data disk attached to each instance | 30 |
+| VMSS configured with Rolling upgrade policy and automatic OS image upgrades | 40 |
 
-| Requirement                                                                               | Points |
-|:------------------------------------------------------------------------------------------|:------:|
-| Create Build Step that performs some basic checks of your IaC (linting, plan, etc.)       |   50   |
-| Create a Deploy step that deploys the infrastructure                                      |   50   |
+> **Note:** All secrets must be stored in Azure Key Vault and referenced at runtime — no credentials in plain text.
 
-> **NOTE** All secrets must be securely stored and referenced (i.e. nothing in plain text)
+---
 
-------------
+## Challenge 4: IaC CI/CD Pipeline
 
-> **EXTRA CREDIT** If you are an over achiever and have the time, you can do up to one additional challenge.
+Build a pipeline that lints, validates, and deploys the infrastructure from one of the hands-on labs or a previous challenge. You may use **GitHub Actions**, **Azure DevOps Pipelines**, or any equivalent CI/CD platform. The pipeline must meet the following requirements.
+
+| Requirement | Points |
+|:---|:---:|
+| Build/validate stage: `terraform fmt -check`, `terraform validate`, `terraform plan` with results published as a pipeline artifact | 50 |
+| Deploy stage: `terraform apply` triggered on merge to `main`, with state stored remotely (e.g. Azure Blob backend) | 50 |
+
+> **Note:** All secrets (ARM credentials, backend storage keys) must be stored as encrypted pipeline secrets or in Azure Key Vault — no credentials in plain text.
+
+---
+
+> **Extra Credit:** If you finish early and have time remaining, you may complete one additional challenge for bonus points.

@@ -1,47 +1,40 @@
-# Data source reference to key vault instance
-data "azurerm_key_vault" "tf_pre-day" {
+# Reference the Key Vault instance from Part 1
+data "azurerm_key_vault" "tf_preday" {
   name                = var.key_vault
   resource_group_name = var.rg2
 }
 
-# Data source reference to the secret
-data "azurerm_key_vault_secret" "tf_pre-day" {
+# Read the secret stored in Part 1
+data "azurerm_key_vault_secret" "tf_preday" {
   name         = var.secret_id
-  key_vault_id = data.azurerm_key_vault.tf_pre-day.id
+  key_vault_id = data.azurerm_key_vault.tf_preday.id
 }
 
-# Configure Virtual Machine
-resource "azurerm_virtual_machine" "predayvm" {
-  name                  = "tfignitepredayvm"
+# Linux Virtual Machine — password sourced from Key Vault, never in code
+resource "azurerm_linux_virtual_machine" "predayvm" {
+  name                  = "tfpreday-vm"
   location              = var.location
   resource_group_name   = var.rg
-  vm_size               = "Standard_B1s"
+  size                  = "Standard_B2s"
   network_interface_ids = [azurerm_network_interface.predaynic.id]
 
-  storage_image_reference {
+  admin_username                  = "azureadmin"
+  disable_password_authentication = false
+  admin_password                  = data.azurerm_key_vault_secret.tf_preday.value
+
+  source_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
   }
 
-  storage_os_disk {
-    name              = "myosdisk1"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+  os_disk {
+    name                 = "osdisk-tfpreday"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
   }
 
-  os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = data.azurerm_key_vault_secret.tf_pre-day.value
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-  tags                = var.tags
+  tags = var.tags
 }
 

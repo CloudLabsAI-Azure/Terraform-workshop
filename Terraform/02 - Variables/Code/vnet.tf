@@ -1,15 +1,15 @@
-# Configure Vnet -- pull subnet out to its own resource to demonstrate references / dependencies
+# Virtual Network
 resource "azurerm_virtual_network" "predayvnet" {
-  name                = "tfignitepreday"
+  name                = "tfpreday-vnet"
   location            = var.location
   resource_group_name = var.rg
   address_space       = ["10.0.0.0/16"]
 }
 
-# Configure Subnet
+# Subnet — declared as a standalone resource so its .id can be referenced by the NIC
 resource "azurerm_subnet" "predaysubnet" {
-  name                 = "default"
+  name                 = "subnet1"
   resource_group_name  = var.rg
   virtual_network_name = azurerm_virtual_network.predayvnet.name
-  address_prefix       = "10.0.1.0/24"
+  address_prefixes     = ["10.0.1.0/24"]
 }

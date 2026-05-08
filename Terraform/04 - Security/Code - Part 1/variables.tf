@@ -1,24 +1,24 @@
 variable "rg" {
-  type        = "string"
-  description = "Name of Lab resource group to provision resources to."
+  type        = string
+  description = "Name of the resource group where Key Vault is located."
 }
 
 variable "secret_id" {
-  type        = "string"
-  description = "name of secret containing admin password for vms"
+  type        = string
+  description = "Name of the Key Vault secret to store the VM admin password."
 }
 
 variable "labUser" {
-  type        = "string"
-  description = "Username for lab account"
+  type        = string
+  description = "User Principal Name (UPN) of the lab user (e.g. user@domain.com)."
 }
 
 variable "tenant_id" {
-  type        = "string"
-  description = "Id for tenant"
+  type        = string
+  description = "Azure AD tenant ID."
 }
 
 variable "key_vault" {
-  type        = "string"
-  description = "Name of the pre-existing key vault instance"
+  type        = string
+  description = "Name of the pre-existing Azure Key Vault instance."
 }

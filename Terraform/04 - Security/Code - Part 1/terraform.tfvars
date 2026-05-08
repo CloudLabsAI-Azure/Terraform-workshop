@@ -1,5 +1,5 @@
-rg = "" ## Enter the resource group pre-created in your lab
+rg        = ""  # Enter the resource group name where Key Vault is located
 secret_id = "lab04admin"
-labUser = "" ## Enter the lab user name as shown in the Environment Details tab
-key_vault = "" ## Enter the name of the pre-created key vault instance
-tenant_id = "" ## Enter the tenant ID for your lab user
+labUser   = ""  # Enter your Azure AD UPN (e.g. user@contoso.com)
+key_vault = ""  # Enter the pre-created Key Vault name
+tenant_id = ""  # Run: az account show --query tenantId -o tsv
