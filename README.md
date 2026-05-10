@@ -21,17 +21,17 @@ By the end of this workshop you will understand how to write, validate, and appl
 
    - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
 
-     ![](../images/terraform-lab-email.png)
+     ![](./images/terraform-lab-email.png)
 
 1. Now enter the following password and click **Sign in**.
 
    - **Temporary Access Pass:** <inject key="AzureAdUserPassword"></inject>
 
-     ![](../images/terraform-lab-tap.png)
+     ![](./images/terraform-lab-tap.png)
 
 1. If you see the pop-up **Stay Signed in?**, click **Yes**.
 
-   ![](../images/terraform-lab-sign-in-yes.png)
+   ![](./images/terraform-lab-sign-in-yes.png)
 
 1. If a Welcome to Microsoft Azure pop-up window appears, simply click **Maybe later** to skip the tour.
 
@@ -41,19 +41,19 @@ In the lab VM browser:
 
 1. On the **Azure Portal**, from the top navigation bar, click the **Cloud Shell** icon (`>_`).
 
-   ![](../images/terraform-lab-azure-cloudshell-icon.png)
+   ![](./images/terraform-lab-azure-cloudshell-icon.png)
 
 2. Select **Bash**.
 
-   ![](../images/terraform-lab-azure-cloudshell-bash.png)
+   ![](./images/terraform-lab-azure-cloudshell-bash.png)
 
 3. On the CloudShell Bash **Getting started** page, select **Mount storage account (1)**, select your default subscription from the **Storage account subscription (2)** dropdown and click **Apply (3)**.
 
-   ![](../images/terraform-lab-azure-cloudshell-bash-gs.png)
+   ![](./images/terraform-lab-azure-cloudshell-bash-gs.png)
 
 4. On the CloudShell Bash **Mount storage account** page, select **I want to create a storage account (1)** and click **Next (2)**.
 
-   ![](../images/terraform-lab-azure-cloudshell-bash-mount-strg.png)
+   ![](./images/terraform-lab-azure-cloudshell-bash-mount-strg.png)
 
 5. On the CloudShell Bash **Create storage account** page and fill in:
    
@@ -64,7 +64,7 @@ In the lab VM browser:
    - **File share** — fileshare<inject key="Deployment-ID"></inject> (5)
    - Click **Create (6)**
 
-   ![](../images/terraform-lab-azure-cloudshell-bash-create-strg.png)
+   ![](./images/terraform-lab-azure-cloudshell-bash-create-strg.png)
    
 
 > **Note:** Use the `IaC-Terraform-RG-<inject key="Deployment-ID"></inject>` resource group for all Azure resources provisioned during the labs.
