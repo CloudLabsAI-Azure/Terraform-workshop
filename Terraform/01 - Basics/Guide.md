@@ -22,23 +22,54 @@ You will be able to complete the following tasks:
 
 In this task you will install the required tools and open the working folder where all Terraform files for this lab will be created.
 
-1. Open **Visual Studio Code** on your lab machine.
+1. Open **Visual Studio Code** on your Lab-VM.
 
-1. Install the following VS Code extensions if not already present:
+   ![](../../images/vs.png)
+
+1. Once the IDE opens, if you see a prompt to sign in to GitHub. Click **Continue without signing in** (you will sign in during the upcoming steps).
+
+   ![](../../images/vsc-continue-without-sign-in.png)
+
+1. When the color theme pop-up appears, select your preferred theme and click **Continue**.
+
+   ![](../../images/vsc-colour-theme-continue.png)
+
+1. When the Build with AI Agents pop-up appears, explore the available Copilot agents and features, then click **Get Started**.
+
+   ![](../../images/vsc-build-with-ai-agents-get-started.png)
+
+1. In VS Code, ensure that the following extensions are installed:
+   
    - [HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) — syntax highlighting, validation, and IntelliSense for `.tf` files.
    - [Azure Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
+  
+   ![](../../images/vsc-terraform-lab-extensions.png)
 
-1. Create a new folder on your machine for this lab, for example `C:\TerraformLabs\Lab01`.
+1. From the **File** menu in VS Code, choose **Open Folder**.
 
-1. In VS Code, select **File → Open Folder…** and open the folder you just created.
+   ![](../../images/vsc-open-folder.png)
 
-1. Open the integrated terminal (**Terminal → New Terminal**) and verify Terraform is installed:
+1. Select the **C:\TerraformLabs (1)** folder and click **Select folder (2)**.
+
+   ![](../../images/vsc-select-folder-terraformlabs.png)
+
+1. Now you will see another screen Do you trust the authors of the files in this folder?. Select the **checkbox (1)** Trust the authors of all files in the parent folder 'C:' and then click **Yes, I trust the authors (2)**.
+
+   ![](../../images/vsc-trust-folder-terraformlabs.png)
+
+1. Open the integrated terminal **Terminal → New Terminal** and verify Terraform is installed:
+
+   ![](../../images/vsc-terraform-lab-new-terminal.png)
+
+1. In the integrated terminal, verify Terraform is installed:
 
    ```bash
    terraform version
    ```
 
-   You should see **Terraform v1.9.x** or later.
+   You should see **Terraform v1.9.x** or later. In this case, **Terraform v1.15.2**.
+
+   ![](../../images/vsc-terraform-version.png)
 
 > **Note:** All `terraform` commands in this workshop are run from the **Azure Cloud Shell** (Bash). Use **View → Command Palette → Azure Terraform: Push** to sync your local files to Cloud Shell before running any Terraform command. The first time you do this from a new folder you will be prompted to open the Cloud Shell web application — select **Open** to continue.
 
@@ -50,9 +81,11 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
 
 > **Note:** The `features {}` block is **required** by the AzureRM provider. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
 
-1. In VS Code, create a new file named **`provider.tf`** in your lab folder.
+1. In VS Code, open the **Terraform/01 - Basics/Code** folder in the **TerraformLabs** directory.
 
-1. Paste the following code into `provider.tf` and save the file (`Ctrl+S`):
+   ![](../../images/vsc-terraform-01-basics-code.png)
+
+1. Open the `provider.tf` and review the file the contents:
 
    ```terraform
    terraform {
@@ -70,6 +103,8 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
    }
    ```
 
+   ![](../../images/vsc-terraform-01-basics-code-provider-tf.png)
+
    Key points:
    - `required_providers` pins the AzureRM provider version.
    - `required_version` ensures Terraform CLI is at least 1.9.
@@ -81,7 +116,7 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
 
 In this task you create `variables.tf` and `terraform.tfvars` so that environment-specific values (resource group name and Azure region) are kept separate from resource definitions.
 
-1. Create a new file named **`variables.tf`** and paste the following:
+1. Open the **`variables.tf`** and review the file the contents:
 
    ```terraform
    variable "rg" {
@@ -95,12 +130,16 @@ In this task you create `variables.tf` and `terraform.tfvars` so that environmen
    }
    ```
 
-1. Create a new file named **`terraform.tfvars`** and fill in your values:
+   ![](../../images/vsc-terraform-01-basics-code-variables-tf.png)
+
+1. Open the **`terraform.tfvars`** and update the values:
 
    ```terraform
-   rg       = "my-lab-rg"    # Replace with your resource group name
+   rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"    # Replace with your resource group name
    location = "eastus"       # Replace with your Azure region
    ```
+
+   ![](../../images/vsc-terraform-01-basics-code-terraform-tfvars.png)
 
    > **Note:** `terraform.tfvars` is automatically loaded by Terraform at runtime. Never commit secret values to this file — use environment variables or Azure Key Vault for secrets (covered in Lab 04).
 
@@ -118,12 +157,12 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
 | **Subnet** | A logical subdivision of the VNet's address space. Resources are deployed into subnets. |
 | **Region scope** | A VNet lives in a single Azure region. Use VNet Peering to connect VNets across regions. |
 
-1. Create a new file named **`vnet.tf`** and paste the following:
+1. Open the **`vnet.tf`** and review the file the contents:
 
    ```terraform
    # Virtual Network
    resource "azurerm_virtual_network" "predayvnet" {
-     name                = "tfpreday-vnet"
+     name                = "tfpreday-vnet-<inject key="Deployment-ID"></inject>"
      location            = var.location
      resource_group_name = var.rg
      address_space       = ["10.0.0.0/16"]
@@ -138,6 +177,8 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
    }
    ```
 
+   ![](../../images/vsc-terraform-01-basics-code-vnet-tf.png)
+
    Key points:
    - Subnets are declared as **separate `azurerm_subnet` resources** rather than inline blocks — this makes them independently referenceable.
    - `address_prefixes` accepts a list of CIDR ranges.
@@ -149,12 +190,40 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
 
 In this task you run the three core Terraform commands to provision the infrastructure.
 
-1. Push your files to Azure Cloud Shell: **View → Command Palette → Azure Terraform: Push**.
+1. In the integrated terminal, login to Azure portal:
 
-1. In Cloud Shell, navigate to your lab folder (it is synced under `~/clouddrive`):
+   ```
+   az login
+   ```
 
-   ```bash
-   cd ~/clouddrive/Lab01
+1. On the *Let’s get you signed in pop-up*, select **Work or school account**, then click **Continue**. You may need to minimize any open applications to bring this window into view.
+
+   ![](../../images/az-select-work-or-school-account.png)
+
+1. You'll see the Sign into Microsoft Azure tab. Here, enter your credentials:
+
+   - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
+  
+     ![](../../images/az-enter-username.png)
+  
+1. Next, enter the Temporary Access Pass:
+
+   - **Temporary Access Pass:** <inject key="AzureAdUserPassword"></inject>
+  
+     ![](../../images/az-enter-tap.png)
+
+1. On the *Sign in to all apps, websites, and services on this device?*, click **No, this app only**.
+
+   ![](../../images/az-no-this-app-only.png)
+
+1. You are now signed in to the Azure portal from your Visual Studio Code terminal. When prompted to select a subscription and tenant, press **Enter** to accept the default selection.
+
+   ![](../../images/az-select-subs-enter.png)
+
+1. Navigate to the `C:\TerraformLabs\Terraform\01 - Basics\Code` directory:
+
+   ```
+   cd 'C:\TerraformLabs\Terraform\01 - Basics\Code'
    ```
 
 1. **Initialize** — download the AzureRM provider plugin:
@@ -164,6 +233,8 @@ In this task you run the three core Terraform commands to provision the infrastr
    ```
 
    You should see: `Terraform has been successfully initialized!`
+
+   ![](../../images/vsc-01-terraform-init.png)
 
 1. **Plan** — preview the changes without deploying:
 
@@ -176,6 +247,8 @@ In this task you run the three core Terraform commands to provision the infrastr
    ```
    Plan: 2 to add, 0 to change, 0 to destroy.
    ```
+
+   ![](../../images/vsc-01-terraform-plan.png)
 
    You should see two resources to be created: `azurerm_virtual_network.predayvnet` and `azurerm_subnet.predaysubnet`.
 
@@ -191,7 +264,11 @@ In this task you run the three core Terraform commands to provision the infrastr
    Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
    ```
 
+   ![](../../images/vsc-01-terraform-apply.png)
+
 1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet** with subnet **subnet1**.
+
+   ![](../../images/01-azure-vnet-subnet.png)
 
 > **Note:** Terraform is **idempotent**. If you run `terraform plan` again immediately after a successful apply, it will report `No changes. Infrastructure is up-to-date.`
 
