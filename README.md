@@ -15,7 +15,7 @@ By the end of this workshop you will understand how to write, validate, and appl
 
 1. On your virtual machine, click on the **Azure Portal** icon as shown below:
 
-   ![](../images/labvm-azure-portal.png)
+   ![](./images/labvm-azure-portal.png)
 
 1. On the Sign in to Microsoft Azure tab you will see the login screen, in that enter the following email/username and click **Next**.
 
