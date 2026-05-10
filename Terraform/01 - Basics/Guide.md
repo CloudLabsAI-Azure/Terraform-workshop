@@ -36,7 +36,7 @@ In this task you will install the required tools and open the working folder whe
 
 1. When the Build with AI Agents pop-up appears, explore the available Copilot agents and features, then click **Get Started**.
 
-   ![](../../images/vsc-new-build-with-ai-agents-get-started.png)
+   ![](../../images/vsc-build-with-ai-agents-get-started.png)
 
 1. In VS Code, ensure that the following extensions are installed:
    
@@ -190,12 +190,40 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
 
 In this task you run the three core Terraform commands to provision the infrastructure.
 
-1. Push your files to Azure Cloud Shell: **View → Command Palette → Azure Terraform: Push**.
+1. In the integrated terminal, login to Azure portal:
 
-1. In Cloud Shell, navigate to your lab folder (it is synced under `~/clouddrive`):
+   ```
+   az login
+   ```
 
-   ```bash
-   cd ~/clouddrive/TerraformLabs/Terraform/01 - Basics/Code
+1. On the *Let’s get you signed in pop-up*, select **Work or school account**, then click **Continue**. You may need to minimize any open applications to bring this window into view.
+
+   ![](../../images/az-select-work-or-school-account.png)
+
+1. You'll see the Sign into Microsoft Azure tab. Here, enter your credentials:
+
+   - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
+  
+     ![](../../images/az-enter-username.png)
+  
+1. Next, enter the Temporary Access Pass:
+
+   - **Temporary Access Pass:** <inject key="AzureAdUserPassword"></inject>
+  
+     ![](../../images/az-enter-tap.png)
+
+1. On the *Sign in to all apps, websites, and services on this device?*, click **No, this app only**.
+
+   ![](../../images/az-no-this-app-only.png)
+
+1. You are now signed in to the Azure portal from your Visual Studio Code terminal. When prompted to select a subscription and tenant, press **Enter** to accept the default selection.
+
+   ![](../../images/az-select-subs-enter.png)
+
+1. Navigate to the `C:\TerraformLabs\Terraform\01 - Basics\Code` directory:
+
+   ```
+   cd 'C:\TerraformLabs\Terraform\01 - Basics\Code'
    ```
 
 1. **Initialize** — download the AzureRM provider plugin:
@@ -206,7 +234,7 @@ In this task you run the three core Terraform commands to provision the infrastr
 
    You should see: `Terraform has been successfully initialized!`
 
-   ![](../../images/vsc-terraform-01-basics-terraform-init.png)
+   ![](../../images/vsc-01-terraform-init.png)
 
 1. **Plan** — preview the changes without deploying:
 
@@ -220,19 +248,9 @@ In this task you run the three core Terraform commands to provision the infrastr
    Plan: 2 to add, 0 to change, 0 to destroy.
    ```
 
+   ![](../../images/vsc-01-terraform-plan.png)
+
    You should see two resources to be created: `azurerm_virtual_network.predayvnet` and `azurerm_subnet.predaysubnet`.
-
-   - If you get access token error while executing the command, follow the below steps and rerun the command:
-  
-     ![](../../images/vsc-terraform-01-basics-terraform-init-error.png)
-
-     - Log out of Azure CloudShell and log in using Microsoft Graph.
-    
-       ```
-       az logout
-       az login 
-
-   
 
 1. **Apply** — deploy the resources to Azure:
 
@@ -246,7 +264,11 @@ In this task you run the three core Terraform commands to provision the infrastr
    Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
    ```
 
+   ![](../../images/vsc-01-terraform-apply.png)
+
 1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet** with subnet **subnet1**.
+
+   ![](../../images/01-azure-vnet-subnet.png)
 
 > **Note:** Terraform is **idempotent**. If you run `terraform plan` again immediately after a successful apply, it will report `No changes. Infrastructure is up-to-date.`
 
