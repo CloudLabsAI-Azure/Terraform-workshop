@@ -23,9 +23,11 @@ You will be able to complete the following tasks:
 
 In this task you add a second subnet representing the web tier of a typical three-tier architecture.
 
-1. Open `vnet.tf`.
+1. In VS Code, open the **Terraform/03 - Helpers/code** folder in the **TerraformLabs** directory.
 
-1. Add the following subnet resource after the existing `predaysubnet`:
+   ![](../../images/vsc-terraform-03-helpers-code.png)
+
+1. Open the `vnet.tf` and review the file the contents:
 
    ```terraform
    # Web tier subnet
@@ -36,6 +38,8 @@ In this task you add a second subnet representing the web tier of a typical thre
      address_prefixes     = ["10.0.2.0/24"]
    }
    ```
+
+   ![](../../images/vsc-terraform-03-helpers-code-vnet-tf.png)
 
    > **Note:** NSG associations are managed through the dedicated `azurerm_subnet_network_security_group_association` resource (added in Task 4), not via an attribute on the subnet.
 
@@ -71,6 +75,8 @@ Rather than hard-coding security rules, you will store them as a structured vari
      description = "Tags to apply to all resources."
    }
    ```
+
+   ![](../../images/vsc-terraform-03-helpers-code-variables-tf.png)
 
 1. Open `terraform.tfvars` and add the values:
 
@@ -112,6 +118,8 @@ Rather than hard-coding security rules, you will store them as a structured vari
      year        = "2026"
    }
    ```
+
+   ![](../../images/vsc-terraform-03-helpers-code-terraform-tfvars.png)
 
    NSG rules in Azure are evaluated in **ascending priority order** (lower number = higher priority). The Allow rules for HTTP (100) and HTTPS (150) are evaluated before the Deny-all rule (200).
 
@@ -179,7 +187,11 @@ The NSG is created independently; the association resource links it to the subne
 
 1. Open `nic.tf` and add `tags = var.tags` to the NIC resource.
 
+   ![](../../images/vsc-terraform-03-helpers-code-nic-tf.png)
+
 1. Open `vm.tf` and add `tags = var.tags` to the VM resource. Also update the VNet resource in `vnet.tf` to include `tags = var.tags`.
+
+   ![](../../images/vsc-terraform-03-helpers-code-vm-tf.png)
 
 1. Confirm `provider.tf` uses the modern `required_providers` block:
 
@@ -203,7 +215,21 @@ The NSG is created independently; the association resource links it to the subne
 
 ## Task 6: Plan and apply
 
-1. Push files to Cloud Shell: **View â†’ Command Palette â†’ Azure Terraform: Push**.
+1. In the integrated terminal, navigate to the `C:\TerraformLabs\Terraform\03 - Helpers\code` directory:
+
+   ```
+   cd 'C:\TerraformLabs\Terraform\03 - Helpers\code'
+   ```
+   
+1. **Initialize** — download the AzureRM provider plugin:
+
+   ```bash
+   terraform init
+   ```
+
+   You should see: `Terraform has been successfully initialized!`
+
+   ![](../../images/vsc-03-terraform-init.png)
 
 1. Plan:
 
@@ -216,6 +242,8 @@ The NSG is created independently; the association resource links it to the subne
    ```
    Plan: 3 to add, 1 to change, 0 to destroy.
    ```
+
+   ![](../../images/vsc-03-terraform-plan.png)
 
    The 3 additions are: `predaywebsubnet`, `predaysg` (NSG), and `azurerm_subnet_network_security_group_association`. The 1 change is the VNet gaining tags.
 
