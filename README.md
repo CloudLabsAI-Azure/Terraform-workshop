@@ -6,11 +6,6 @@ By the end of this workshop you will understand how to write, validate, and appl
 
 ---
 
-## Before you start
-
-1. Go to the launch URL provided, sign up, and enter your activation code.
-2. Click **Launch Lab** — your lab VM RDP session will open in the browser.
-
 ## Login to Azure portal
 
 1. On your virtual machine, click on the **Azure Portal** icon as shown below:
