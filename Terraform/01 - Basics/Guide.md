@@ -266,7 +266,7 @@ In this task you run the three core Terraform commands to provision the infrastr
 
    ![](../../images/vsc-01-terraform-apply-01.png)
 
-1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet** with subnet **subnet1**.
+1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet-<inject key="Deployment-ID"></inject>** with subnet **subnet1**.
 
    ![](../../images/01-azure-vnet-subnet-01.png)
 
