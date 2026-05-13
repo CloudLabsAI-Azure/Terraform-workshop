@@ -26,37 +26,34 @@ Subnets are declared as independent `azurerm_subnet` resources. This lets you re
 
    ![](../../images/vsc-terraform-02-variables-code.png)
 
-1. Open the `vnet.tf` and review the file the contents:
+1. Open the `vnet.tf` and update the file to reference the pre-created VNet & subnet from lab 01:
 
    ```terraform
-   # Virtual Network
-   resource "azurerm_virtual_network" "predayvnet" {
+   # Virtual Network created in Lab 01
+   data "azurerm_virtual_network" "predayvnet" {
      name                = "tfpreday-vnet-<inject key="Deployment-ID"></inject>"
-     location            = var.location
      resource_group_name = var.rg
-     address_space       = ["10.0.0.0/16"]
    }
 
-   # Subnet â€” standalone resource; its .id is referenced by the NIC below
-   resource "azurerm_subnet" "predaysubnet" {
+   # Subnet created in Lab 01
+   data "azurerm_subnet" "predaysubnet" {
      name                 = "subnet1"
      resource_group_name  = var.rg
      virtual_network_name = azurerm_virtual_network.predayvnet.name
-     address_prefixes     = ["10.0.1.0/24"]
    }
    ```
 
-   ![](../../images/vsc-terraform-02-variables-code-vnet-tf.png)
+   ![](../../images/vsc-terraform-02-variables-code-vnet-tf-update.png)
 
    > **Note:** The expression `azurerm_virtual_network.predayvnet.name` creates an **implicit dependency**. Terraform builds a Directed Acyclic Graph (DAG) from these references and always provisions the VNet before the Subnet â€” no explicit `depends_on` is needed.
 
 ---
 
-## Task 2: Create nic.tf â€” add a Network Interface
+## Task 2: Update nic.tf â€” add a Network Interface
 
 Every Azure VM needs a Network Interface to communicate. The NIC is attached to a subnet and assigned a private IP.
 
-1. Open the **`nic.tf`** and review the file contents:
+1. Open the **`nic.tf`** and update the file to reference the existing VNet and Subnet created in Lab 01. Ensure to modify the VNet and NIC names to use <inject key="Deployment-ID"></inject> as suffix.
 
    ```terraform
    # Network Interface
@@ -67,7 +64,7 @@ Every Azure VM needs a Network Interface to communicate. The NIC is attached to 
 
      ip_configuration {
        name                          = "ipconfig1"
-       subnet_id                     = azurerm_subnet.predaysubnet.id
+       subnet_id                     = data.azurerm_subnet.predaysubnet.id
        private_ip_address_allocation = "Dynamic"
      }
    }
@@ -83,7 +80,7 @@ Every Azure VM needs a Network Interface to communicate. The NIC is attached to 
 
 The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, readable schema â€” image, OS disk, and admin credentials are defined directly on the resource.
 
-1. Create a new file named **`vm.tf`** with the following code:
+1. Open the **`vm.tf`** amd update the Virtual Machine name to **tfpreday-vm-<inject key="Deployment-ID"></inject>**:
 
    ```terraform
    # Linux Virtual Machine
@@ -151,7 +148,7 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    ```terraform
    rg             = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"     # Replace with your resource group name
-   location       = "eastus"        # Replace with your Azure region
+   location       = "<inject key="Region"></inject>"        # Replace with your Azure region
    admin_password = "P@ssw0rd123!"  # Replace with a strong password (â‰¥ 12 chars)
    ```
 
@@ -166,7 +163,7 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 1. In the integrated terminal, navigate to the `C:\TerraformLabs\Terraform\02 - Variables\Code` directory:
 
    ```
-   cd 'C:\TerraformLabs\Terraform\02 - Variables\Code'
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\02 - Variables\Code'
    ```
 
 1. **Initialize** — download the AzureRM provider plugin:
@@ -177,7 +174,7 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    You should see: `Terraform has been successfully initialized!`
 
-   ![](../../images/vsc-02-terraform-init.png)
+   ![](../../images/vsc-02-terraform-init-01.png)
 
 1. **Plan** — preview the changes without deploying:
 
@@ -188,12 +185,12 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
    Expected result:
 
    ```
-   Plan: 4 to add, 0 to change, 0 to destroy.
+   Plan: 2 to add, 0 to change, 0 to destroy.
    ```
 
-   ![](../../images/vsc-02-terraform-plan.png)
+   ![](../../images/vsc-02-terraform-plan-01.png)
 
-   You should see: `azurerm_virtual_network`, `azurerm_subnet`, `azurerm_network_interface`, `azurerm_linux_virtual_machine`.
+   You should see: `azurerm_network_interface`, `azurerm_linux_virtual_machine`.
 
 1. Review the DAG ordering in the plan output â€” Terraform lists resources in dependency order. Apply:
 
@@ -201,11 +198,11 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
    terraform apply tfplan
    ```
 
-   ![](../../images/vsc-02-terraform-apply.png)
+   ![](../../images/vsc-02-terraform-apply-01.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your resource group and confirm all four resources were created.
+1. In the [Azure portal](https://portal.azure.com), navigate to your resource group and confirm VM, OS Disk and NIC resources were created.
 
-   ![](../../images/02-azure-resources.png)
+   ![](../../images/02-azure-resources-01.png)
 
 ---
 
