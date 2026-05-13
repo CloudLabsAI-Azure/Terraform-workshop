@@ -103,7 +103,7 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
      }
 
      os_disk {
-       name                 = "osdisk-tfpreday"
+       name                 = "osdisk-tfpreday--<inject key="Deployment-ID"></inject>"
        caching              = "ReadWrite"
        storage_account_type = "Standard_LRS"
      }
