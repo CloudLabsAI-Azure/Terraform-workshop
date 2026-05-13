@@ -11,7 +11,7 @@ In this lab you will use Terraform to provision the fundamental building block o
 You will be able to complete the following tasks:
 
 - Task 1: Set up your Terraform environment
-- Task 2: Configure the AzureRM provider
+- Task 2: Review the AzureRM provider
 - Task 3: Declare input variables
 - Task 4: Define the Virtual Network and Subnet
 - Task 5: Initialize, plan, and apply the configuration
@@ -41,7 +41,7 @@ In this task you will install the required tools and open the working folder whe
 1. In VS Code, ensure that the following extensions are installed:
    
    - [HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) — syntax highlighting, validation, and IntelliSense for `.tf` files.
-   - [Azure Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
+   - [Microsoft Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
   
    ![](../../images/vsc-terraform-lab-extensions.png)
 
@@ -49,13 +49,13 @@ In this task you will install the required tools and open the working folder whe
 
    ![](../../images/vsc-open-folder.png)
 
-1. Select the **C:\TerraformLabs (1)** folder and click **Select folder (2)**.
+1. Select the **TerraformLabs** folder and click **Select folder**.
 
-   ![](../../images/vsc-select-folder-terraformlabs.png)
+   ![](../../images/vsc-select-folder-terraformlabs-01.png)
 
-1. Now you will see another screen Do you trust the authors of the files in this folder?. Select the **checkbox (1)** Trust the authors of all files in the parent folder 'C:' and then click **Yes, I trust the authors (2)**.
+1. Now you will see another screen Do you trust the authors of the files in this folder?. Select the **checkbox (1)** *Trust the authors of all files in the parent folder 'azureuser'* and then click **Yes, I trust the authors (2)**.
 
-   ![](../../images/vsc-trust-folder-terraformlabs.png)
+   ![](../../images/vsc-trust-folder-terraformlabs-01.png)
 
 1. Open the integrated terminal **Terminal → New Terminal** and verify Terraform is installed:
 
@@ -69,15 +69,13 @@ In this task you will install the required tools and open the working folder whe
 
    You should see **Terraform v1.9.x** or later. In this case, **Terraform v1.15.2**.
 
-   ![](../../images/vsc-terraform-version.png)
-
-> **Note:** All `terraform` commands in this workshop are run from the **Azure Cloud Shell** (Bash). Use **View → Command Palette → Azure Terraform: Push** to sync your local files to Cloud Shell before running any Terraform command. The first time you do this from a new folder you will be prompted to open the Cloud Shell web application — select **Open** to continue.
+   ![](../../images/vsc-terraform-version-01.png)
 
 ---
 
-## Task 2: Configure the AzureRM provider
+## Task 2: Review the AzureRM provider
 
-In this task you create `provider.tf`, which tells Terraform which cloud provider plugin to download and use. The **azurerm** provider is the official HashiCorp plugin for Microsoft Azure.
+In this task you will review `provider.tf`, which tells Terraform which cloud provider plugin to download and use. The **azurerm** provider is the official HashiCorp plugin for Microsoft Azure.
 
 > **Note:** The `features {}` block is **required** by the AzureRM provider. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
 
@@ -100,10 +98,12 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
 
    provider "azurerm" {
      features {}
+
+     resource_provider_registrations = "none"
    }
    ```
 
-   ![](../../images/vsc-terraform-01-basics-code-provider-tf.png)
+   ![](../../images/vsc-terraform-01-basics-code-provider-tf-01.png)
 
    Key points:
    - `required_providers` pins the AzureRM provider version.
@@ -114,7 +114,7 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
 
 ## Task 3: Declare input variables
 
-In this task you create `variables.tf` and `terraform.tfvars` so that environment-specific values (resource group name and Azure region) are kept separate from resource definitions.
+In this task you will review `variables.tf` and update `terraform.tfvars` so that environment-specific values (resource group name and Azure region) are kept separate from resource definitions.
 
 1. Open the **`variables.tf`** and review the file the contents:
 
@@ -136,7 +136,7 @@ In this task you create `variables.tf` and `terraform.tfvars` so that environmen
 
    ```terraform
    rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"    # Replace with your resource group name
-   location = "eastus"       # Replace with your Azure region
+   location = "<inject key="Region"></inject>"       # Replace with your Azure region
    ```
 
    ![](../../images/vsc-terraform-01-basics-code-terraform-tfvars.png)
@@ -147,7 +147,7 @@ In this task you create `variables.tf` and `terraform.tfvars` so that environmen
 
 ## Task 4: Define the Virtual Network and Subnet
 
-In this task you create `vnet.tf`, which defines two resources: an Azure Virtual Network and a Subnet.
+In this task you will update `vnet.tf`, which defines two resources: an Azure Virtual Network and a Subnet.
 
 **Key VNet concepts:**
 
@@ -157,7 +157,7 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
 | **Subnet** | A logical subdivision of the VNet's address space. Resources are deployed into subnets. |
 | **Region scope** | A VNet lives in a single Azure region. Use VNet Peering to connect VNets across regions. |
 
-1. Open the **`vnet.tf`** and review the file the contents:
+1. Open the **`vnet.tf`** and modify the Virtual Network name from "tfpreday-vnet" to **tfpreday-vnet-<inject key="Deployment-ID"></inject>** to ensure the resource name is unique across Azure deployments.
 
    ```terraform
    # Virtual Network
@@ -218,12 +218,12 @@ In this task you run the three core Terraform commands to provision the infrastr
 
 1. You are now signed in to the Azure portal from your Visual Studio Code terminal. When prompted to select a subscription and tenant, press **Enter** to accept the default selection.
 
-   ![](../../images/az-select-subs-enter.png)
+   ![](../../images/az-select-subs-enter-01.png)
 
-1. Navigate to the `C:\TerraformLabs\Terraform\01 - Basics\Code` directory:
+1. Navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\01 - Basics\Code` directory:
 
    ```
-   cd 'C:\TerraformLabs\Terraform\01 - Basics\Code'
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\01 - Basics\Code'
    ```
 
 1. **Initialize** — download the AzureRM provider plugin:
@@ -234,7 +234,7 @@ In this task you run the three core Terraform commands to provision the infrastr
 
    You should see: `Terraform has been successfully initialized!`
 
-   ![](../../images/vsc-01-terraform-init.png)
+   ![](../../images/vsc-01-terraform-init-01.png)
 
 1. **Plan** — preview the changes without deploying:
 
@@ -248,7 +248,7 @@ In this task you run the three core Terraform commands to provision the infrastr
    Plan: 2 to add, 0 to change, 0 to destroy.
    ```
 
-   ![](../../images/vsc-01-terraform-plan.png)
+   ![](../../images/vsc-01-terraform-plan-01.png)
 
    You should see two resources to be created: `azurerm_virtual_network.predayvnet` and `azurerm_subnet.predaysubnet`.
 
@@ -264,11 +264,11 @@ In this task you run the three core Terraform commands to provision the infrastr
    Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
    ```
 
-   ![](../../images/vsc-01-terraform-apply.png)
+   ![](../../images/vsc-01-terraform-apply-01.png)
 
 1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet** with subnet **subnet1**.
 
-   ![](../../images/01-azure-vnet-subnet.png)
+   ![](../../images/01-azure-vnet-subnet-01.png)
 
 > **Note:** Terraform is **idempotent**. If you run `terraform plan` again immediately after a successful apply, it will report `No changes. Infrastructure is up-to-date.`
 
