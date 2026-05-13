@@ -39,7 +39,7 @@ Subnets are declared as independent `azurerm_subnet` resources. This lets you re
    data "azurerm_subnet" "predaysubnet" {
      name                 = "subnet1"
      resource_group_name  = var.rg
-     virtual_network_name = azurerm_virtual_network.predayvnet.name
+     virtual_network_name = data.azurerm_virtual_network.predayvnet.name                   
    }
    ```
 
