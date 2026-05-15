@@ -231,7 +231,79 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
 
 ## Part 2 — Reference the Secret from Infrastructure
 
-### Task 4: Reference the Key Vault secret in vm.tf
+### Task 4: Update the Virtual Network & Network Interface
+
+1. Open `vnet.tf` and update the code:
+
+   ```
+   # Virtual Network
+   resource "azurerm_virtual_network" "predayvnet" {
+     name                = "tfpreday-vnet-<inject key="Deployment-ID"></inject>"
+     location            = var.location
+     resource_group_name = var.rg
+     address_space       = ["10.0.0.0/16"]
+     tags                = var.tags
+   }
+
+   # Default subnet
+   resource "azurerm_subnet" "predaysubnet" {
+     name                 = "subnet1"
+     resource_group_name  = var.rg
+     virtual_network_name = azurerm_virtual_network.predayvnet.name
+     address_prefixes     = ["10.0.1.0/24"]
+   }
+
+   # Network Security Group with dynamic rules
+   resource "azurerm_network_security_group" "predaysg" {
+     name                = "default-nsg-<inject key="Deployment-ID"></inject>"
+     location            = var.location
+     resource_group_name = var.rg
+
+     dynamic "security_rule" {
+       for_each = var.security_group_rules
+
+       content {
+         name                       = lower(security_rule.value.name)
+         description                = "Rule for ${security_rule.value.protocol} traffic"
+         priority                   = security_rule.value.priority
+         direction                  = security_rule.value.direction
+         access                     = security_rule.value.access
+         protocol                   = title(security_rule.value.protocol)
+         source_port_range          = "*"
+         destination_port_range     = security_rule.value.destinationPortRange
+         source_address_prefix      = "*"
+         destination_address_prefix = "VirtualNetwork"
+       }
+     }
+   }
+
+   # Associate NSG with the default subnet
+   resource "azurerm_subnet_network_security_group_association" "preday" {
+     subnet_id                 = azurerm_subnet.predaysubnet.id
+     network_security_group_id = azurerm_network_security_group.predaysg.id
+   }
+   ```
+
+1. Open `nic.tf` and update the code:
+
+   ```
+   # Network Interface
+   resource "azurerm_network_interface" "predaynic" {
+     name                = "tfpreday-nic-<inject key="Deployment-ID"></inject>"
+     location            = var.location
+     resource_group_name = var.rg
+
+     ip_configuration {
+       name                          = "ipconfig1"
+       subnet_id                     = azurerm_subnet.predaysubnet.id
+       private_ip_address_allocation = "Dynamic"
+     }
+
+     tags = var.tags
+   }
+   ```
+
+### Task 5: Reference the Key Vault secret in vm.tf
 
 In this task you update the VM configuration from Lab 03 so that the admin password is read from Key Vault at plan/apply time — it never appears in your `.tf` files or `terraform.tfvars`.
 
@@ -252,7 +324,7 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
 
    # Linux Virtual Machine — password sourced from Key Vault, never in code
    resource "azurerm_linux_virtual_machine" "predayvm" {
-     name                  = "tfpreday-vm"
+     name                  = "tfpreday-vm-<inject key="Deployment-ID"></inject>"
      location              = var.location
      resource_group_name   = var.rg
      size                  = "Standard_B2s"
@@ -270,7 +342,7 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
      }
 
      os_disk {
-       name                 = "osdisk-tfpreday"
+       name                 = "osdisk-tfpreday-<inject key="Deployment-ID"></inject>"
        caching              = "ReadWrite"
        storage_account_type = "Standard_LRS"
      }
@@ -304,8 +376,28 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
 
    ```terraform
    secret_id = "lab04admin"
-   key_vault = ""  # Enter the pre-created Key Vault name
-   rg2       = ""  # Enter the resource group where Key Vault exists
+   key_vault = "keyvault--<inject key="Deployment-ID"></inject>"  # Enter the pre-created Key Vault name
+   rg2       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter the resource group where Key Vault exists
+   ```
+
+1. Confirm `provider.tf` uses the modern `required_providers` block:
+
+   ```
+   terraform {
+     required_providers {
+       azurerm = {
+         source  = "hashicorp/azurerm"
+         version = "~> 4.0"
+       }
+     }
+     required_version = ">= 1.9.0"
+   }
+
+   provider "azurerm" {
+     features {}
+
+     resource_provider_registrations = "none"
+   }
    ```
 
 ---
