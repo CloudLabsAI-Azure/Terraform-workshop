@@ -29,9 +29,11 @@ You will be able to complete the following tasks:
 
 In this task you create a new working folder for Part 1 and configure three providers.
 
-1. Create a folder named **`Lab04-Part1`** and create the following files inside it: `providers.tf`, `main.tf`, `variables.tf`, `terraform.tfvars`.
+1. In VS Code, open the **Terraform/02 - Variables/Code - Part 1** folder in the **TerraformLabs** directory.
 
-1. Add the following to **`providers.tf`**:
+   ![](../../images/vsc-terraform-04-security-code-part-1.png)
+
+1. Open **`providers.tf`** and ensure the code is similar:
 
    ```terraform
    terraform {
@@ -54,12 +56,16 @@ In this task you create a new working folder for Part 1 and configure three prov
 
    provider "azurerm" {
      features {}
+
+     resource_provider_registrations = "none"
    }
 
    provider "azuread" {}
 
    provider "random" {}
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-1-providers-tf.png)
 
    Provider summary:
 
@@ -75,7 +81,7 @@ In this task you create a new working folder for Part 1 and configure three prov
 
 In this task you write `main.tf` to read the existing Key Vault, generate a password, and store it as a secret.
 
-1. Add the following to **`main.tf`**:
+1. Open **`main.tf`** and ensure that the code is similar:
 
    ```terraform
    # Reference the resource group where Key Vault lives
@@ -122,13 +128,15 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    }
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-1-main-tf.png)
+
    Key points:
    - `data.azuread_user.lab04_user.object_id` references the user's unique ID in Entra ID.
    - `secret_permissions` values are **title-cased** (`"Get"`, `"Set"`, etc.).
    - `random_password` (not `random_string`) ensures the result is marked sensitive and never printed in logs.
    - `depends_on` ensures the access policy exists before the secret is written.
 
-1. Add the following to **`variables.tf`**:
+1. Open **`variables.tf`** and ensure the code is similar:
 
    ```terraform
    variable "rg" {
@@ -157,15 +165,19 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    }
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-1-variables-tf.png)
+
 1. Add your values to **`terraform.tfvars`**:
 
    ```terraform
-   rg        = ""           # Enter the resource group name where Key Vault is located
+   rg        = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"           # Enter the resource group name where Key Vault is located
    secret_id = "lab04admin"
-   labUser   = ""           # Enter your Azure AD UPN (e.g. user@contoso.com)
-   key_vault = ""           # Enter the pre-created Key Vault name
-   tenant_id = ""           # Run: az account show --query tenantId -o tsv
+   labUser   = "<inject key="AzureAdUserEmail"></inject>"           # Enter your Azure AD UPN (e.g. user@contoso.com)
+   key_vault = "keyvault-<inject key="Deployment-ID"></inject>"           # Enter the pre-created Key Vault name
+   tenant_id = "<inject key="TenantID"></inject>"           # Run: az account show --query tenantId -o tsv
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-1-terraform-tfvars.png)
 
    > **Note:** To get your tenant ID, run `az account show --query tenantId -o tsv` in Azure Cloud Shell.
 
@@ -173,13 +185,33 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
 
 ### Task 3: Plan and apply Part 1
 
-1. Push files to Cloud Shell: **View → Command Palette → Azure Terraform: Push**.
+1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\04 - Security\Code - Part 1` directory:
 
-1. In Cloud Shell, navigate to your `Lab04-Part1` folder:
+   ```
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\04 - Security\Code - Part 1'
+   ```
+
+1. **Initialize** — download the AzureRM provider plugin:
 
    ```bash
-   cd ~/clouddrive/Lab04-Part1
    terraform init
+   ```
+
+   You should see: `Terraform has been successfully initialized!`
+
+   ![](../../images/vsc-terraform-04-security-code-1-terraform-init.png)
+
+1. Import the keyvault:
+
+   ```
+   terraform import azurerm_key_vault_access_policy.lab04 "/subscriptions/<inject key="AzureSubsciptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.KeyVault/vaults/keyvault-<inject key="Deployment-ID"></inject>/objectId/<inject key="AzureAdUserObjectID"></inject>"
+   ```
+
+   ![](../../images/vsc-terraform-04-security-code-1-terraform-import-keyvault.png)
+
+1. **Plan** — preview the changes without deploying:
+
+   ```bash
    terraform plan -out tfplan
    ```
 
@@ -189,6 +221,8 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    Plan: 2 to add, 0 to change, 0 to destroy.
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-1-terraform-plan-01.png)
+
    (The `azurerm_key_vault_access_policy` and `azurerm_key_vault_secret`.)
 
 1. Apply:
@@ -196,6 +230,8 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    ```bash
    terraform apply tfplan
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-1-terraform-apply.png)
 
 1. Verify in the [Azure portal](https://portal.azure.com): navigate to your Key Vault → **Secrets** → confirm that **lab04admin** has been created.
 
