@@ -204,7 +204,7 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
 1. Import the keyvault:
 
    ```
-   terraform import azurerm_key_vault_access_policy.lab04 "/subscriptions/<inject key="AzureSubsciptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.KeyVault/vaults/keyvault-<inject key="Deployment-ID"></inject>/objectId/<inject key="AzureAdUserObjectID"></inject>"
+   terraform import azurerm_key_vault_access_policy.lab04 "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.KeyVault/vaults/keyvault-<inject key="Deployment-ID"></inject>/objectId/<inject key="AzureUserObjectID"></inject>"
    ```
 
    ![](../../images/vsc-terraform-04-security-code-1-terraform-import-keyvault.png)
