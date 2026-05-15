@@ -275,10 +275,10 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
 ## Task 6: Plan and apply
 
-1. In the integrated terminal, navigate to the `C:\TerraformLabs\Terraform\03 - Helpers\code` directory:
+1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code` directory:
 
    ```
-   cd 'C:\TerraformLabs\Terraform\03 - Helpers\code'
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code'
    ```
    
 1. **Initialize** — download the AzureRM provider plugin:
