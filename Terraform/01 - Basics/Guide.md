@@ -67,7 +67,7 @@ In this task you will install the required tools and open the working folder whe
    terraform version
    ```
 
-   You should see **Terraform v1.9.x** or later. In this case, **Terraform v1.15.2**.
+   You should see **Terraform v1.9.x** or later.
 
    ![](../../images/vsc-terraform-version-01.png)
 
@@ -188,7 +188,7 @@ In this task you will update `vnet.tf`, which defines two resources: an Azure Vi
 
 ## Task 5: Initialize, plan, and apply the configuration
 
-In this task you run the three core Terraform commands to provision the infrastructure.
+In this task you will login to Azure portal and run the three core Terraform commands to provision the infrastructure.
 
 1. In the integrated terminal, login to Azure portal:
 
