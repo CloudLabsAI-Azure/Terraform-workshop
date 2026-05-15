@@ -32,7 +32,7 @@ In this task you add a second subnet representing the web tier of a typical thre
    ```terraform
    # Virtual Network
    resource "azurerm_virtual_network" "predayvnet" {
-     name                = "tfpreday-vnet-2219985"
+     name                = "tfpreday-vnet-<inject key="Deployment-ID"></inject>"
      location            = var.location
      resource_group_name = var.rg
      address_space       = ["10.0.0.0/16"]
@@ -57,7 +57,7 @@ In this task you add a second subnet representing the web tier of a typical thre
 
    # Network Security Group with dynamic rules
    resource "azurerm_network_security_group" "predaysg" {
-     name                = "web-nsg"
+     name                = "web-nsg-<inject key="Deployment-ID"></inject>"
      location            = var.location
      resource_group_name = var.rg
 
@@ -98,6 +98,16 @@ Rather than hard-coding security rules, you will store them as a structured vari
 1. Open `variables.tf` and add the following variables (or ensure they are present):
 
    ```terraform
+   variable "rg" {
+     type        = string
+     description = "Name of the resource group to provision resources into."
+   }
+
+   variable "location" {
+     type        = string
+     description = "Azure region where resources will be deployed (e.g. eastus, westeurope)."
+   }
+
    variable "admin_password" {
      type        = string
      description = "Administrator password for the virtual machine (min 12 characters)."
@@ -122,13 +132,13 @@ Rather than hard-coding security rules, you will store them as a structured vari
    }
    ```
 
-   ![](../../images/vsc-terraform-03-helpers-code-variables-tf.png)
+   ![](../../images/vsc-terraform-03-helpers-code-variables-tf-01.png)
 
 1. Open `terraform.tfvars` and add the values:
 
    ```terraform
-   rg             = "my-lab-rg"
-   location       = "eastus"
+   rg             = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"
+   location       = "<inject key="Region"></inject>"
    admin_password = "P@ssw0rd123!"
 
    security_group_rules = [
@@ -233,9 +243,56 @@ The NSG is created independently; the association resource links it to the subne
 
 1. Open `nic.tf` and add `tags = var.tags` to the NIC resource.
 
+   ```
+   # Network Interface
+   resource "azurerm_network_interface" "predaynic" {
+     name                = "tfpreday-nic-<inject key="Deployment-ID"></inject>"
+     location            = var.location
+     resource_group_name = var.rg
+
+     ip_configuration {
+       name                          = "ipconfig1"
+       subnet_id                     = azurerm_subnet.predaysubnet.id
+       private_ip_address_allocation = "Dynamic"
+     }
+
+     tags = var.tags
+   }
+   ```
+
    ![](../../images/vsc-terraform-03-helpers-code-nic-tf.png)
 
 1. Open `vm.tf` and add `tags = var.tags` to the VM resource. Also update the VNet resource in `vnet.tf` to include `tags = var.tags`.
+
+   ```
+   # Linux Virtual Machine
+   resource "azurerm_linux_virtual_machine" "predayvm" {
+     name                  = "tfpreday-vm-<inject key="Deployment-ID"></inject>"
+     location              = var.location
+     resource_group_name   = var.rg
+     size                  = "Standard_B2s"
+     network_interface_ids = [azurerm_network_interface.predaynic.id]
+
+     admin_username                  = "azureadmin"
+     disable_password_authentication = false
+     admin_password                  = var.admin_password
+
+     source_image_reference {
+       publisher = "Canonical"
+       offer     = "0001-com-ubuntu-server-jammy"
+       sku       = "22_04-lts-gen2"
+       version   = "latest"
+     }
+
+     os_disk {
+       name                 = "osdisk-tfpreday-<inject key="Deployment-ID"></inject>"
+       caching              = "ReadWrite"
+       storage_account_type = "Standard_LRS"
+     }
+
+     tags = var.tags
+   }
+   ```
 
    ![](../../images/vsc-terraform-03-helpers-code-vm-tf.png)
 
@@ -277,6 +334,32 @@ The NSG is created independently; the association resource links it to the subne
 
    ![](../../images/vsc-03-terraform-init.png)
 
+1. Import the existing azure resources into the Terraform state to plan the additional deployments.
+
+   ```
+   terraform import azurerm_linux_virtual_machine.predayvm "/subscriptions/<inject key="AzureSubsciptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Compute/virtualMachines/tfpreday-vm-<inject key="Deployment-ID"></inject>"
+   ```
+
+   ![](../../images/vsc-03-terraform-import-vm.png)
+
+   ```
+   terraform import azurerm_network_interface.predaynic "/subscriptions/<inject key="AzureSubsciptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/networkInterfaces/tfpreday-nic-<inject key="Deployment-ID"></inject>"
+   ```
+
+   ![](../../images/vsc-03-terraform-import-nic.png)
+
+   ```
+   terraform import azurerm_virtual_network.predayvnet "/subscriptions/<inject key="AzureSubsciptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>"
+   ```
+
+   ![](../../images/vsc-03-terraform-import-vnet.png)
+
+   ```
+   terraform import azurerm_subnet.predaysubnet "/subscriptions/<inject key="AzureSubsciptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>/subnets/subnet1"
+   ```
+
+   ![](../../images/vsc-03-terraform-import-subnet.png)
+
 1. Plan:
 
    ```bash
@@ -299,11 +382,16 @@ The NSG is created independently; the association resource links it to the subne
    terraform apply tfplan
    ```
 
+   ![](../../images/vsc-03-terraform-apply.png)
+
 1. In the [Azure portal](https://portal.azure.com), navigate to your resource group and verify:
    - A new subnet **web** (`10.0.2.0/24`) exists in the VNet.
    - A new NSG **web-nsg** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
    - The NSG is associated with the **web** subnet.
 
+   ![](../../images/03-azure-resources-nsg.png)
+
+   ![](../../images/03-azure-resources-subnet-nsg-association.png)
 ---
 
 ## Summary
