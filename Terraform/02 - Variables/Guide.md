@@ -10,15 +10,15 @@ In this lab you will extend the Virtual Network created in Lab 01 by adding a **
 
 You will be able to complete the following tasks:
 
-- Task 1: Update vnet.tf â€” use a standalone subnet resource
-- Task 2: Create nic.tf â€” add a Network Interface
-- Task 3: Create vm.tf â€” add a Linux Virtual Machine
+- Task 1: Update Virtual Network and Subnet
+- Task 2: Create the Network Interface
+- Task 3: Create the Linux Virtual Machine
 - Task 4: Add and populate variables
 - Task 5: Plan and apply the full configuration
 
 ---
 
-## Task 1: Update vnet.tf â€” use a standalone subnet resource
+## Task 1: Update Virtual Network and Subnet
 
 Subnets are declared as independent `azurerm_subnet` resources. This lets you reference the subnet's `.id` attribute from the NIC in the next task.
 
@@ -49,7 +49,7 @@ Subnets are declared as independent `azurerm_subnet` resources. This lets you re
 
 ---
 
-## Task 2: Update nic.tf â€” add a Network Interface
+## Task 2: Create the Network Interface
 
 Every Azure VM needs a Network Interface to communicate. The NIC is attached to a subnet and assigned a private IP.
 
@@ -76,7 +76,7 @@ Every Azure VM needs a Network Interface to communicate. The NIC is attached to 
 
 ---
 
-## Task 3: Create vm.tf â€” add a Linux Virtual Machine
+## Task 3: Create the Linux Virtual Machin
 
 The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, readable schema â€” image, OS disk, and admin credentials are defined directly on the resource.
 
