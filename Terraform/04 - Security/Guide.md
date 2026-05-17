@@ -233,6 +233,10 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
 
 ### Task 4: Update the Virtual Network & Network Interface
 
+1. In VS Code, open the **Terraform/02 - Variables/Code - Part 2** folder in the **TerraformLabs** directory.
+
+   ![](../../images/vsc-terraform-04-security-code-part-2.png)
+
 1. Open `vnet.tf` and update the code:
 
    ```
@@ -375,9 +379,45 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
 1. Update `terraform.tfvars` with the Key Vault values:
 
    ```terraform
+   rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter your target resource group name
+   location = "<inject key="Region"></inject>"  # Enter your Azure region (e.g. "eastus", "westeurope")
+
+   security_group_rules = [
+     {
+       name                 = "http"
+       priority             = 100
+       protocol             = "tcp"
+       destinationPortRange = "80"
+       direction            = "Inbound"
+       access               = "Allow"
+     },
+     {
+       name                 = "https"
+       priority             = 150
+       protocol             = "tcp"
+       destinationPortRange = "443"
+       direction            = "Inbound"
+       access               = "Allow"
+     },
+     {
+       name                 = "deny-the-rest"
+       priority             = 200
+       protocol             = "*"
+       destinationPortRange = "0-65535"
+       direction            = "Inbound"
+       access               = "Deny"
+     },
+   ]
+
    secret_id = "lab04admin"
-   key_vault = "keyvault--<inject key="Deployment-ID"></inject>"  # Enter the pre-created Key Vault name
+   key_vault = "keyvault-<inject key="Deployment-ID"></inject>"  # Enter the pre-created Key Vault name
    rg2       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter the resource group where Key Vault exists
+
+   tags = {
+     environment = "lab"
+     workshop    = "IaC-with-Terraform"
+     year        = "2026"
+   }
    ```
 
 1. Confirm `provider.tf` uses the modern `required_providers` block:
@@ -404,7 +444,48 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
 
 ### Task 5: Plan and apply Part 2
 
-1. Push files to Cloud Shell and plan:
+1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\04 - Security\Code - Part 2` directory:
+
+   ```
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\04 - Security\Code - Part 2'
+   ```
+
+1. **Initialize** — download the AzureRM provider plugin:
+
+   ```bash
+   terraform init
+   ```
+
+   You should see: `Terraform has been successfully initialized!`
+
+1. Import the existing azure resources into the Terraform state to plan the additional deployments.
+
+   ```
+   terraform import azurerm_linux_virtual_machine.predayvm "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Compute/virtualMachines/tfpreday-vm-<inject key="Deployment-ID"></inject>"
+   ```
+
+   ![](../../images/vsc-04-terraform-import-vm.png)
+
+   ```
+   terraform import azurerm_network_interface.predaynic "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/networkInterfaces/tfpreday-nic-<inject key="Deployment-ID"></inject>"
+   ```
+
+   ![](../../images/vsc-04-terraform-import-nic.png)
+
+   ```
+   terraform import azurerm_virtual_network.predayvnet "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>"
+   ```
+
+   ![](../../images/vsc-04-terraform-import-vnet.png)
+
+   ```
+   terraform import azurerm_subnet.predaysubnet "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>/subnets/subnet1"
+   ```
+
+   ![](../../images/vsc-04-terraform-import-subnet.png)
+
+
+1. **Plan** — preview the changes without deploying:
 
    ```bash
    terraform plan -out tfplan
