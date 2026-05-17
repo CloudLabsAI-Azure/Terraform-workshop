@@ -70,8 +70,12 @@ terraform {
 
 provider "azurerm" {
   features {}
+
+  resource_provider_registrations = "none"
 }
 ```
+
+![](../../images/vsc-terraform-05-reusability-code-providers-tf.png)
 
 ### modules/azvm/variables.tf
 
@@ -134,6 +138,8 @@ variable "host_name" {
 }
 ```
 
+![](../../images/vsc-terraform-05-reusability-code-variables-tf.png)
+
 ### modules/azvm/subnet.tf
 
 ```terraform
@@ -176,6 +182,8 @@ resource "azurerm_subnet_network_security_group_association" "preday" {
 }
 ```
 
+![](../../images/vsc-terraform-05-reusability-code-subnet-tf.png)
+
 Key concept: `regex("^[[:alpha:]]+", var.host_name)` extracts the leading alphabetic prefix from the hostname. For `"web001"` it returns `"web"`; for `"mysql001"` it returns `"mysql"`. This ensures all subnet names within one VNet are unique.
 
 ### modules/azvm/nic.tf
@@ -195,6 +203,8 @@ resource "azurerm_network_interface" "predaynic" {
   tags = var.tags
 }
 ```
+
+![](../../images/vsc-terraform-05-reusability-code-nic-tf.png)
 
 ### modules/azvm/vm.tf
 
@@ -240,6 +250,8 @@ resource "azurerm_linux_virtual_machine" "predayvm" {
 }
 ```
 
+![](../../images/vsc-terraform-05-reusability-code-vm-tf.png)
+
 ### modules/azvm/outputs.tf
 
 ```terraform
@@ -259,6 +271,8 @@ output "mac_address" {
 }
 ```
 
+![](../../images/vsc-terraform-05-reusability-code-outputs-tf.png)
+
 ---
 
 ## Task 3: Write main.tf to call the module
@@ -267,11 +281,11 @@ output "mac_address" {
 
 ```terraform
 locals {
-  rg       = ""  # Enter your target resource group name
-  location = ""  # Enter your Azure region (e.g. "eastus", "westeurope")
+  rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter your target resource group name
+  location = "<inject key="Region"></inject>"  # Enter your Azure region (e.g. "eastus", "westeurope")
 
-  rg2       = ""  # Enter the resource group where Key Vault exists
-  key_vault = ""  # Enter the pre-created Key Vault name
+  rg2       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter the resource group where Key Vault exists
+  key_vault = "keyvault-<inject key="Deployment-ID"></inject>"  # Enter the pre-created Key Vault name
 
   tags = {
     environment = "lab"
@@ -303,9 +317,30 @@ module "frontend" {
   subnet_cidr = "172.16.10.0/24"
 
   security_group_rules = [
-    { name = "http",  priority = 100, protocol = "tcp", destinationPortRange = "80",     direction = "Inbound", access = "Allow" },
-    { name = "https", priority = 150, protocol = "tcp", destinationPortRange = "443",    direction = "Inbound", access = "Allow" },
-    { name = "deny-the-rest", priority = 200, protocol = "*", destinationPortRange = "0-65535", direction = "Inbound", access = "Deny" },
+    {
+      name                 = "http"
+      priority             = 100
+      protocol             = "tcp"
+      destinationPortRange = "80"
+      direction            = "Inbound"
+      access               = "Allow"
+    },
+    {
+      name                 = "https"
+      priority             = 150
+      protocol             = "tcp"
+      destinationPortRange = "443"
+      direction            = "Inbound"
+      access               = "Allow"
+    },
+    {
+      name                 = "deny-the-rest"
+      priority             = 200
+      protocol             = "*"
+      destinationPortRange = "0-65535"
+      direction            = "Inbound"
+      access               = "Deny"
+    },
   ]
 
   tags = local.tags
@@ -325,17 +360,33 @@ module "mysql_db" {
   subnet_cidr = "172.16.20.0/24"
 
   security_group_rules = [
-    { name = "mysql",         priority = 100, protocol = "tcp", destinationPortRange = "3306",    direction = "Inbound", access = "Allow" },
-    { name = "deny-the-rest", priority = 200, protocol = "*",   destinationPortRange = "0-65535", direction = "Inbound", access = "Deny" },
+    {
+      name                 = "mysql"
+      priority             = 100
+      protocol             = "tcp"
+      destinationPortRange = "3306"
+      direction            = "Inbound"
+      access               = "Allow"
+    },
+    {
+      name                 = "deny-the-rest"
+      priority             = 200
+      protocol             = "*"
+      destinationPortRange = "0-65535"
+      direction            = "Inbound"
+      access               = "Deny"
+    },
   ]
 
   tags = local.tags
 }
 ```
 
+![](../../images/vsc-terraform-05-reusability-code-main-tf.png)
+
 Notice that calling `module "frontend"` and `module "mysql_db"` with the same `source` but different inputs provisions completely independent, isolated sets of resources — demonstrating true reusability.
 
-You can also reference module outputs in root configuration. For example:
+NOTE - You can also reference module outputs in root configuration. For example:
 
 ```terraform
 output "frontend_ip" {
@@ -359,13 +410,9 @@ output "frontend_ip" {
    terraform init
    ```
 
+   ![](../../images/vsc-terraform-05-reusability-code-terraform-init.png)
+
    You should see: `Terraform has been successfully initialized!`
-
-1. Import the existing azure resources into the Terraform state to plan the additional deployments.
-
-   ```
-   terraform import azurerm_virtual_network.predayvnet "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>"
-   ```
 
 1. Plan:
 
@@ -379,6 +426,8 @@ output "frontend_ip" {
    Plan: 11 to add, 0 to change, 0 to destroy.
    ```
 
+   ![](../../images/vsc-terraform-05-reusability-code-terraform-plan.png)
+
    Resources: 1 VNet + (2 subnets + 2 NSGs + 2 NSG associations + 2 NICs + 2 VMs) = 11.
 
 1. Apply:
@@ -386,6 +435,8 @@ output "frontend_ip" {
    ```bash
    terraform apply tfplan
    ```
+
+   ![](../../images/vsc-terraform-05-reusability-code-terraform-apply.png)
 
 1. Verify in the [Azure portal](https://portal.azure.com):
    - VNet **tfpreday-vnet** with two subnets: **web** (`172.16.10.0/24`) and **mysql** (`172.16.20.0/24`).
