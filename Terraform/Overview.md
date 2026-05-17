@@ -122,7 +122,7 @@ To adjust the zoom level for the environment page, click the **A↕: 100%** icon
 
 1. If a Welcome to Microsoft Azure pop-up window appears, simply click **Maybe later** to skip the tour.
 
-1. Use the **IaC-Terraform-RG-<inject key="Deployment-ID"></inject>** resource group for all Azure resources provisioned during the labs.
+1. Use the **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"/></inject>** resource group for all Azure resources provisioned during the labs.
 
 ## Support Contact
 
