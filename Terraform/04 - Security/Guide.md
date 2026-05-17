@@ -213,7 +213,7 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    Plan: 3 to add, 0 to change, 0 to destroy.
    ```
 
-   ![](../../images/vsc-terraform-04-security-code-1-terraform-plan-01.png)
+   ![](../../images/vsc-terraform-04-security-code-1-terraform-plan-new.png)
 
    (The `azurerm_key_vault_access_policy` and `azurerm_key_vault_secret`.)
 
@@ -226,6 +226,8 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    ![](../../images/vsc-terraform-04-security-code-1-terraform-apply.png)
 
 1. Verify in the [Azure portal](https://portal.azure.com): navigate to your Key Vault → **Secrets** → confirm that **lab04admin** has been created.
+
+   ![](../../images/04-azure-resources-key-vault-secret.png)
 
 ---
 
@@ -288,6 +290,8 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
    }
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-2-vnet-tf.png)
+
 1. Open `nic.tf` and update the code:
 
    ```
@@ -306,6 +310,8 @@ In this task you write `main.tf` to read the existing Key Vault, generate a pass
      tags = var.tags
    }
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-2-nic-tf.png)
 
 ### Task 5: Reference the Key Vault secret in vm.tf
 
@@ -355,11 +361,35 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
    }
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-2-vm-tf.png)
+
    The critical line: `admin_password = data.azurerm_key_vault_secret.tf_preday.value` — Terraform reads the secret value at runtime. Your code contains only a **reference**, not the actual password.
 
 1. Ensure `variables.tf` includes the new variables `secret_id`, `key_vault`, and `rg2`:
 
    ```terraform
+   variable "rg" {
+     type        = string
+     description = "Name of the resource group to provision resources into."
+   }
+
+   variable "location" {
+     type        = string
+     description = "Azure region where resources will be deployed (e.g. eastus, westeurope)."
+   }
+
+   variable "security_group_rules" {
+     type = list(object({
+       name                 = string
+       priority             = number
+       protocol             = string
+       destinationPortRange = string
+       direction            = string
+       access               = string
+     }))
+     description = "List of NSG security rules."
+   }
+
    variable "secret_id" {
      type        = string
      description = "Name of the Key Vault secret containing the VM admin password."
@@ -374,7 +404,14 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
      type        = string
      description = "Name of the resource group where Key Vault exists."
    }
+
+   variable "tags" {
+     type        = map(string)
+     description = "Tags to apply to all resources."
+   }
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-2-variables-tf.png)
 
 1. Update `terraform.tfvars` with the Key Vault values:
 
@@ -420,6 +457,8 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
    }
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-2-terraform-tfvars.png)
+
 1. Confirm `provider.tf` uses the modern `required_providers` block:
 
    ```
@@ -455,6 +494,8 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
    ```bash
    terraform init
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-2-terraform-init.png)
 
    You should see: `Terraform has been successfully initialized!`
 
@@ -494,8 +535,12 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
    Expected result:
 
    ```
-   Plan: 5 to add, 0 to change, 0 to destroy.
+   Plan: 2 to add, 3 to change, 0 to destroy.
    ```
+
+   ![](../../images/vsc-terraform-04-security-code-2-terraform-plan.png)
+
+   You should see `azurerm_network_security_group` and `azurerm_subnet_network_security_group_association` created and your Virtual Machine's password updated to the Azure Key Vault's secret.
 
 1. Apply:
 
@@ -503,9 +548,13 @@ In this task you update the VM configuration from Lab 03 so that the admin passw
    terraform apply tfplan
    ```
 
+   ![](../../images/vsc-terraform-04-security-code-2-terraform-apply.png)
+
 1. Confirm in the Azure portal that the VM was created. Note that nowhere in your code or `tfvars` is the actual password visible.
 
-   > **Note:** The password is still stored in the Terraform state file (`terraform.tfstate`). Always store state remotely in an encrypted backend such as **Azure Blob Storage** with soft-delete enabled. See [Store Terraform state in Azure Storage](https://learn.microsoft.com/azure/developer/terraform/store-state-in-azure-storage) for setup instructions.
+   ![](../../images/04-azure-resources-nsg.png)
+
+   ![](../../images/04-azure-resources-subnet-nsg-association.png)
 
 ---
 
