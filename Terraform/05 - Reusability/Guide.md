@@ -282,7 +282,7 @@ locals {
 
 # Shared Virtual Network — modules attach their subnets to this VNet
 resource "azurerm_virtual_network" "predayvnet" {
-  name                = "tfpreday-vnet"
+  name                = "tf-reusable-vnet-<inject key="Deployment-ID"></inject>"
   location            = local.location
   resource_group_name = local.rg
   address_space       = ["172.16.0.0/16"]
