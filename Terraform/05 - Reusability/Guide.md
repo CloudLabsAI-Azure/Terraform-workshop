@@ -21,12 +21,12 @@ You will be able to complete the following tasks:
 
 In this task you create the folders and files required by the module.
 
-1. In VS Code, open the **Terraform/03 - Helpers/code** folder in the **TerraformLabs** directory.
+1. In VS Code, open the **Terraform/05 - Reusability/Code** folder in the **TerraformLabs** directory.
 
    ![](../../images/vsc-terraform-05-reusability-code.png)
 
    ```
-   Lab05/
+   Terraform/05 - Reusability/Code/
    ├── main.tf
    ├── providers.tf
    └── modules/
@@ -350,7 +350,7 @@ output "frontend_ip" {
 1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code` directory:
 
    ```
-   cd 'C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code'
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\05 - Reusability\Code'
    ```
    
 1. **Initialize** — download the AzureRM provider plugin:
