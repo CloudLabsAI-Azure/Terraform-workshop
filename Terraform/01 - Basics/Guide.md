@@ -26,17 +26,9 @@ In this task you will install the required tools and open the working folder whe
 
    ![](../../images/vs.png)
 
-1. Once the IDE opens, if you see a prompt to sign in to GitHub. Click **Continue without signing in** (you will sign in during the upcoming steps).
+1. Once the IDE opens, if you see the ***Welcome to VS Code*** sign-in pop-up for GitHub, simply close the window by clicking the **X** in the top-right corner.
 
-   ![](../../images/vsc-continue-without-sign-in.png)
-
-1. When the color theme pop-up appears, select your preferred theme and click **Continue**.
-
-   ![](../../images/vsc-colour-theme-continue.png)
-
-1. When the Build with AI Agents pop-up appears, explore the available Copilot agents and features, then click **Get Started**.
-
-   ![](../../images/vsc-build-with-ai-agents-get-started.png)
+   ![](../../images/vsc-welcome-window-close.png)
 
 1. In VS Code, ensure that the following extensions are installed:
    
@@ -61,13 +53,13 @@ In this task you will install the required tools and open the working folder whe
 
    ![](../../images/vsc-terraform-lab-new-terminal.png)
 
-1. In the integrated terminal, verify Terraform is installed:
+1. In the integrated terminal, verify that Terraform is installed by running the following command:
 
    ```bash
    terraform version
    ```
 
-   You should see **Terraform v1.9.x** or later.
+   You should see **Terraform version 1.9.x** or later installed in the environment.
 
    ![](../../images/vsc-terraform-version-01.png)
 
@@ -266,7 +258,7 @@ In this task you will login to Azure portal and run the three core Terraform com
 
    ![](../../images/vsc-01-terraform-apply-01.png)
 
-1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet-<inject key="Deployment-ID"></inject>** with subnet **subnet1**.
+1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group — you should see **tfpreday-vnet-<inject key="Deployment-ID"></inject>** Virtual Network with subnet **subnet1**.
 
    ![](../../images/01-azure-vnet-subnet-01.png)
 
