@@ -21,7 +21,9 @@ You will be able to complete the following tasks:
 
 In this task you create the folders and files required by the module.
 
-1. In your Lab 05 working folder, create the following directory structure:
+1. In VS Code, open the **Terraform/03 - Helpers/code** folder in the **TerraformLabs** directory.
+
+   ![](../../images/vsc-terraform-05-reusability-code.png)
 
    ```
    Lab05/
@@ -345,15 +347,25 @@ output "frontend_ip" {
 
 ## Task 4: Plan and apply
 
-1. Push files to Cloud Shell: **View → Command Palette → Azure Terraform: Push**.
+1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code` directory:
 
-1. Navigate to your lab folder in Cloud Shell and initialize (this downloads the AzureRM provider and processes the local module path):
+   ```
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code'
+   ```
+   
+1. **Initialize** — download the AzureRM provider plugin:
 
    ```bash
    terraform init
    ```
 
-   You should see: `Initializing modules...` followed by `Terraform has been successfully initialized!`
+   You should see: `Terraform has been successfully initialized!`
+
+1. Import the existing azure resources into the Terraform state to plan the additional deployments.
+
+   ```
+   terraform import azurerm_virtual_network.predayvnet "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>"
+   ```
 
 1. Plan:
 
