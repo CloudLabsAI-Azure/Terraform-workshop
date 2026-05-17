@@ -439,15 +439,15 @@ output "frontend_ip" {
    ![](../../images/vsc-terraform-05-reusability-code-terraform-apply.png)
 
 1. Verify in the [Azure portal](https://portal.azure.com):
-   - VNet **tfpreday-vnet** with two subnets: **web** (`172.16.10.0/24`) and **mysql** (`172.16.20.0/24`).
+   - VNet **tf-reusable-vnet** with two subnets: **web** (`172.16.10.0/24`) and **mysql** (`172.16.20.0/24`).
    - Two NSGs: **nsg-web001** (HTTP/HTTPS rules) and **nsg-mysql001** (MySQL rule).
    - Two VMs: **web001** and **mysql001**.
+  
+   ![](../../images/05-azure-resources-2-new-nsg.png)
 
-1. Review the module outputs:
+   ![](../../images/05-azure-resources-2-new-vm.png)
 
-   ```bash
-   terraform output
-   ```
+   ![](../../images/05-azure-resources-2-new-subnet.png)
 
 ---
 
