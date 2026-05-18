@@ -2,6 +2,10 @@
 
 ### Estimated Duration: 45 Minutes
 
+## Scenario
+
+As Contoso expands its application architecture into multiple tiers, the infrastructure must include network security controls. In this lab, you will create a web-tier subnet, configure a Network Security Group (NSG) with dynamic rules using iterators, and apply standardized resource tags.
+
 ## Overview
 
 In this lab you will extend the infrastructure from Lab 02 by adding a second **web-tier** subnet and securing it with a **Network Security Group (NSG)**. You will use Terraform `dynamic` blocks with `for_each` to generate multiple NSG rules from a single reusable configuration and apply resource tags for governance and cost tracking.
@@ -388,3 +392,9 @@ In this lab, you completed the following:
 - Applied reusable tags to the Virtual Machine configuration
 - Configured dynamic Network Security Group rules using dynamic blocks and for_each
 - Imported existing Azure resources into Terraform state and deployed infrastructure changes safely
+
+---
+
+You have successfully completed the lab. Click **Next >>** in the lower-right corner to proceed to the next lab.
+
+![](../../images/terraform-lab-next.png)
