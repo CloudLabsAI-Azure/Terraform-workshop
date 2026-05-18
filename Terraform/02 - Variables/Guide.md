@@ -1,32 +1,32 @@
-﻿# Lab 02: Terraform Variables â€” Add a VM with Parameterized Configuration
-
+﻿# Lab 02: Terraform Variables - Add a VM with Parameterized Configuration
+ 
 ### Estimated Duration: 45 Minutes
 
 ## Overview
 
-In this lab you will extend the Virtual Network created in Lab 01 by adding a **Network Interface (NIC)** and a **Linux Virtual Machine**. Along the way you will learn how to parameterize your Terraform configuration using **input variables** (`variables.tf` + `terraform.tfvars`), how to reference one resource's attributes from another (building an implicit dependency graph), and how Terraform automatically determines the correct provisioning order from those references.
+In this lab, you will extend the infrastructure created in Lab 01 by adding a Network Interface (NIC) and a Linux Virtual Machine (VM). You will use Terraform input variables to parameterize the configuration, reference existing Azure resources using data sources, and understand how Terraform automatically builds resource dependencies through expressions and references.
 
 ## Lab Objectives
 
 You will be able to complete the following tasks:
 
-- Task 1: Update Virtual Network and Subnet
-- Task 2: Create the Network Interface
-- Task 3: Create the Linux Virtual Machine
-- Task 4: Add and populate variables
-- Task 5: Plan and apply the full configuration
+- Task 1: Reference Existing Network Resources
+- Task 2: Configure the Virtual Machine Network Interface
+- Task 3: Configure the Linux Virtual Machine
+- Task 4: Configure Terraform variables
+- Task 5: Deploy the Infrastructure with Terraform
 
 ---
 
-## Task 1: Update Virtual Network and Subnet
+## Task 1: Reference Existing Network Resources
 
-Subnets are declared as independent `azurerm_subnet` resources. This lets you reference the subnet's `.id` attribute from the NIC in the next task.
+In this task, you will reference the Virtual Network and subnet that were created in Lab 01. Instead of creating new networking resources, Terraform will use **data sources** to retrieve information about existing Azure resources. Data sources allow Terraform to read infrastructure that already exists without managing or recreating it.
 
 1. In VS Code, open the **Terraform/02 - Variables/Code** folder in the **TerraformLabs** directory.
 
    ![](../../images/vsc-terraform-02-variables-code.png)
 
-1. Open the `vnet.tf` and update the file to reference the pre-created VNet & subnet from lab 01:
+1. Open the `vnet.tf` and update it with the following configuration:
 
    ```terraform
    # Virtual Network created in Lab 01
@@ -45,15 +45,24 @@ Subnets are declared as independent `azurerm_subnet` resources. This lets you re
 
    ![](../../images/vsc-terraform-02-variables-code-vnet-tf-update.png)
 
-   > **Note:** The expression `azurerm_virtual_network.predayvnet.name` creates an **implicit dependency**. Terraform builds a Directed Acyclic Graph (DAG) from these references and always provisions the VNet before the Subnet â€” no explicit `depends_on` is needed.
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `data "azurerm_virtual_network"` | References an existing Azure Virtual Network |
+   | `data "azurerm_subnet"` | References an existing subnet inside the Virtual Network |
+   | `data.azurerm_virtual_network.predayvnet.name` | Retrieves the name of the referenced Virtual Network |
+   | `resource_group_name = var.rg` | Uses the input variable for the Resource Group name |
 
+   > **Note:** Terraform builds a dependency graph automatically using resource and data source references. Explicit `depends_on` statements are not required in this scenario.
+   
 ---
 
-## Task 2: Create the Network Interface
+## Task 2: Configure the Virtual Machine Network Interface
 
-Every Azure VM needs a Network Interface to communicate. The NIC is attached to a subnet and assigned a private IP.
+In this task, you will create a Network Interface Card (NIC) for the Virtual Machine and attach it to the existing subnet.
 
-1. Open the **`nic.tf`** and update the file to reference the existing VNet and Subnet created in Lab 01. Ensure to modify the VNet and NIC names to use <inject key="Deployment-ID"></inject> as suffix.
+Every Azure VM requires at least one NIC to communicate over the network. The NIC connects the VM to a subnet and provides private IP connectivity.
+
+1. Open the **`nic.tf`** and and update the configuration:
 
    ```terraform
    # Network Interface
@@ -72,15 +81,23 @@ Every Azure VM needs a Network Interface to communicate. The NIC is attached to 
 
    ![](../../images/vsc-terraform-02-variables-code-nic-tf.png)
 
-   Notice `azurerm_subnet.predaysubnet.id` â€” this expression references the `id` attribute exported by the `azurerm_subnet` resource. Terraform resolves this reference and orders the provisioning: VNet â†’ Subnet â†’ NIC.
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `azurerm_network_interface` | Creates an Azure Network Interface |
+   | `subnet_id` | Associates the NIC with the existing subnet |
+   | `private_ip_address_allocation = "Dynamic"` | Automatically assigns a private IP address |
+   | `location = var.location` | Uses the deployment region from the variable |
+   | `data.azurerm_subnet.predaysubnet.id` | References the subnet resource ID |
+
+   >**Note:** Terraform automatically creates the dependency chain: Virtual Network → Subnet → Network Interface.
 
 ---
 
-## Task 3: Create the Linux Virtual Machin
+## Task 3: Configure the Linux Virtual Machine
 
-The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, readable schema â€” image, OS disk, and admin credentials are defined directly on the resource.
+In this task, you will configure a Linux Virtual Machine and attach the previously created Network Interface.
 
-1. Open the **`vm.tf`** amd update the Virtual Machine name to **tfpreday-vm-<inject key="Deployment-ID"></inject>**:
+1. Open the **`vm.tf`** amd and update the configuration:
 
    ```terraform
    # Linux Virtual Machine
@@ -112,13 +129,24 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    ![](../../images/vsc-terraform-02-variables-code-vm-tf.png)
 
-   > **Note:** The admin password is read from `var.admin_password`. Never hard-code passwords in `.tf` files â€” in Lab 04 you will replace this with a secret retrieved from Azure Key Vault.
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `azurerm_linux_virtual_machine` | Creates a Linux Virtual Machine |
+   | `network_interface_ids` | Attaches the NIC to the VM |
+   | `size = "Standard_B2s"` | Defines the VM SKU and compute size |
+   | `admin_password = var.admin_password` | Uses the password value from the variable |
+   | `source_image_reference` | Defines the Ubuntu image used for deployment |
+   | `os_disk` | Configures the VM operating system disk |
+
+   > **Note:** Avoid hard-coding passwords directly in Terraform configuration files. In Lab 04, you will retrieve secrets securely from Azure Key Vault.
 
 ---
 
-## Task 4: Add and populate variables
+## Task 4: Configure Terraform variables
 
-1. Open **`variables.tf`** (or create it) and ensure it contains all three variables:
+In this task, you will define the required Terraform variables and assign environment-specific values.
+
+1. Open the **`variables.tf`** and ensure the following variables are present:
 
    ```terraform
    variable "rg" {
@@ -140,11 +168,15 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    ![](../../images/vsc-terraform-02-variables-code-variables-tf.png)
 
-   Key points:
-   - `type = string` uses HCL's type keyword — note there are no quotes around `string`.
-   - `sensitive = true` prevents the password from appearing in `terraform plan` / `apply` output or state file diffs.
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `rg` | Stores the Resource Group name |
+   | `location` | Stores the Azure deployment region |
+   | `admin_password` | Stores the VM administrator password |
+   | `type = string` | Defines the variable datatype |
+   | `sensitive = true` | Prevents sensitive values from appearing in Terraform output |
 
-1. Open **`terraform.tfvars`** and update the values:
+1. Open the **`terraform.tfvars`** and update the values:
 
    ```terraform
    rg             = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"     # Replace with your resource group name
@@ -154,11 +186,13 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    ![](../../images/vsc-terraform-02-variables-code-terraform-tfvars.png)
 
-   > **Note:** Add `terraform.tfvars` to `.gitignore` to avoid committing credentials to source control.
+   > **Note:** Add `terraform.tfvars` to `.gitignore` to avoid committing credentials or sensitive values to source control.
 
 ---
 
-## Task 5: Plan and apply the full configuration
+## Task 5: Deploy the Infrastructure with Terraform
+
+In this task, you will initialize the Terraform working directory, generate an execution plan, and deploy the infrastructure.
 
 1. In the integrated terminal, navigate to the `C:\TerraformLabs\Terraform\02 - Variables\Code` directory:
 
@@ -166,7 +200,7 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
    cd 'C:\Users\azureuser\TerraformLabs\Terraform\02 - Variables\Code'
    ```
 
-1. **Initialize** — download the AzureRM provider plugin:
+1. Initialize the Terraform working directory:
 
    ```bash
    terraform init
@@ -176,13 +210,13 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    ![](../../images/vsc-02-terraform-init-01.png)
 
-1. **Plan** — preview the changes without deploying:
+1. Generate an execution plan:
 
    ```bash
    terraform plan -out tfplan
    ```
 
-   Expected result:
+   Expected output:
 
    ```
    Plan: 2 to add, 0 to change, 0 to destroy.
@@ -190,12 +224,20 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
    ![](../../images/vsc-02-terraform-plan-01.png)
 
-   You should see: `azurerm_network_interface`, `azurerm_linux_virtual_machine`.
+   You should see the following resources listed:
+   - `azurerm_network_interface`
+   - `azurerm_linux_virtual_machine`
 
-1. Review the DAG ordering in the plan output â€” Terraform lists resources in dependency order. Apply:
+1. Apply the Terraform configuration:
 
    ```bash
    terraform apply tfplan
+   ```
+
+   Expected output:
+
+   ```
+   Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
    ```
 
    ![](../../images/vsc-02-terraform-apply-01.png)
@@ -208,6 +250,10 @@ The `azurerm_linux_virtual_machine` resource provisions a Linux VM with a flat, 
 
 ## Summary
 
-In this lab you extended the base VNet configuration with a Network Interface and a Linux VM. You learned to write parameterized Terraform code using `variables.tf` and `terraform.tfvars`, use the `sensitive` attribute to protect secrets, reference resource attributes across files to build implicit dependency graphs, and use the modern `azurerm_linux_virtual_machine` resource with Ubuntu 22.04 LTS.
+In this lab, you completed the following:
 
-### Click **Next >>** to proceed to Lab 03 â€” Helpers & Iterators.
+- Referenced the existing Azure Virtual Network and subnet using Terraform data sources
+- Configured the Virtual Machine Network Interface and Linux Virtual Machine resources
+- Configured Terraform variables for reusable and secure deployments
+- Deployed the infrastructure using the Terraform `init`, `plan`, and `apply` workflow
+- Verified the deployed infrastructure in the Azure portal
