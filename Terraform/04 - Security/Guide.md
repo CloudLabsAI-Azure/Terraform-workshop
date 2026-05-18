@@ -2,6 +2,10 @@
 
 ### Estimated Duration: 60 Minutes
 
+## Scenario
+
+Contoso's security team requires all secrets and passwords to be centrally managed instead of stored in code. In this lab, you will generate a secure password, store it in Azure Key Vault, and retrieve it securely in Terraform to provision infrastructure without exposing secrets.
+
 ## Overview
 
 In real-world Infrastructure as Code (IaC) projects, infrastructure often depends on sensitive values such as passwords, API keys, certificates, and connection strings. Storing these secrets directly in Terraform files or source control creates a major security risk.
@@ -572,3 +576,8 @@ In this lab, you completed the following:
 - Deployed a Virtual Machine using the secret stored in Azure Key Vault
 - Eliminated hard-coded passwords from Terraform configuration files
 
+---
+
+You have successfully completed the lab. Click **Next >>** in the lower-right corner to proceed to the next lab.
+
+![](../../images/terraform-lab-next.png)
