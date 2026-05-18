@@ -335,7 +335,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
 
 ---
 
-## Deploy multiple environments using the module
+## Task 3: Deploy multiple environments using the module
 
 In this task, you will call the same module twice to deploy two independent infrastructure tiers.
 
