@@ -10,15 +10,15 @@ In this lab, you will use Terraform to provision the foundational components of 
 
 You will be able to complete the following tasks:
 
-- Task 1: Configure the Terraform environment
+- Task 1: Prepare the Terraform Development Environment
 - Task 2: Review the AzureRM provider configuration
-- Task 3: Configure Terraform input variables
-- Task 4: Create the Virtual Network and subnet
-- Task 5: Initialize, plan, and apply the configuration
+- Task 3: Define Reusable Terraform Variables
+- Task 4: Create the Azure Virtual Network Configuration
+- Task 5: Deploy the Infrastructure with Terraform
 
 ---
 
-## Task 1: Configure the Terraform environment
+## Task 1: Prepare the Terraform Development Environment
 
 In this task, you will prepare the local development environment required for Terraform deployments in Visual Studio Code, install the required extensions, and verify that Terraform is installed.
 
@@ -109,7 +109,7 @@ Terraform uses providers as plugins to communicate with cloud platforms and serv
 
 ---
 
-## Task 3: Configure Terraform input variables
+## Task 3: Define Reusable Terraform Variables
 
 In this task, you will review how Terraform variables are used to make configurations reusable and environment-independent.
 
@@ -130,7 +130,7 @@ You will define variables in `variables.tf` and assign values using `terraform.t
      description = "Azure region where resources will be deployed (e.g. eastus, westeurope)."
    }
    ```
-
+   
    ![](../../images/vsc-terraform-01-basics-code-variables-tf.png)
 
    | Variable | Description |
@@ -153,7 +153,7 @@ You will define variables in `variables.tf` and assign values using `terraform.t
 
 ---
 
-## Task 4: Define the Virtual Network and Subnet
+## Task 4: Create the Azure Virtual Network Configuration
 
 In this task, you will define the Azure Virtual Network and subnet resources in Terraform.
 
@@ -198,7 +198,7 @@ In this task, you will define the Azure Virtual Network and subnet resources in 
 
 ---
 
-## Task 5: Initialize, plan, and apply the configuration
+## Task 5: Deploy the Infrastructure with Terraform
 
 In this task, you will authenticate to Azure and execute the Terraform workflow to deploy the infrastructure.
 
@@ -215,6 +215,8 @@ You will use the following Terraform commands through the labs:
    ```
    az login
    ```
+
+   > **Note:** You only need to sign in to Azure once in this lab. Keep using the same integrated terminal session for the upcoming labs so that your Azure authentication remains active.
 
 1. On the *Let’s get you signed in pop-up*, select **Work or school account**, then click **Continue**. You may need to minimize any open applications to bring this window into view.
 
