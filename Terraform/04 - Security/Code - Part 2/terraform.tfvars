@@ -37,11 +37,3 @@ tags = {
   workshop    = "IaC-with-Terraform"
   year        = "2026"
 }
-rg2 = "" ## Enter the name of the resource group where key vault exists
-tags = {
-    event           = "Ignite"
-    year            = "2019"
-    session_id      = "PRE04"
-    iac_tool        = "terraform"
-    lab             = "4"
-  }

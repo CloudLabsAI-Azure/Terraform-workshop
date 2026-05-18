@@ -2,57 +2,86 @@
 
 ### Estimated Duration: 30 Minutes
 
+## Scenario
+
+Contoso needs a foundational Azure networking environment for its new cloud workloads. In this lab, you will create a Resource Group, Virtual Network, and Subnet using basic Terraform configurations and learn the core Terraform workflow (init, plan, and apply).
+
 ## Overview
 
-In this lab you will use Terraform to provision the fundamental building block of Azure networking — a Virtual Network (VNet) with a subnet. Azure Virtual Network enables resources such as virtual machines to communicate securely with each other, the internet, and on-premises networks. You will learn the structure of HashiCorp Configuration Language (HCL), configure the AzureRM provider, declare input variables, and run the core Terraform workflow (`init` → `plan` → `apply`).
+In this lab, you will use Terraform to provision the foundational components of Azure networking by creating a Virtual Network (VNet) and subnet. You will configure the AzureRM provider, define reusable input variables, write infrastructure resources using HashiCorp Configuration Language (HCL), and execute the core Terraform workflow: `init` → `plan` → `apply`.
 
 ## Lab Objectives
 
 You will be able to complete the following tasks:
 
-- Task 1: Set up your Terraform environment
-- Task 2: Configure the AzureRM provider
-- Task 3: Declare input variables
-- Task 4: Define the Virtual Network and Subnet
-- Task 5: Initialize, plan, and apply the configuration
+- Task 1: Prepare the Terraform Development Environment
+- Task 2: Review the AzureRM provider configuration
+- Task 3: Define Reusable Terraform Variables
+- Task 4: Create the Azure Virtual Network Configuration
+- Task 5: Deploy the Infrastructure with Terraform
 
 ---
 
-## Task 1: Set up your Terraform environment
+## Task 1: Prepare the Terraform Development Environment
 
-In this task you will install the required tools and open the working folder where all Terraform files for this lab will be created.
+In this task, you will prepare the local development environment required for Terraform deployments in Visual Studio Code, install the required extensions, and verify that Terraform is installed.
 
-1. Open **Visual Studio Code** on your lab machine.
+1. Open **Visual Studio Code** on your Lab-VM.
 
-1. Install the following VS Code extensions if not already present:
+   ![](../../images/vs.png)
+
+1. Once the IDE opens, if you see the ***Welcome to VS Code*** sign-in pop-up for GitHub, simply close the window by clicking the **X** in the upper-right corner.
+
+   ![](../../images/vsc-welcome-window-close.png)
+
+1. In VS Code, ensure that the following extensions are installed:
+   
    - [HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) — syntax highlighting, validation, and IntelliSense for `.tf` files.
-   - [Azure Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
+   - [Microsoft Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
+  
+   ![](../../images/vsc-terraform-lab-extensions.png)
 
-1. Create a new folder on your machine for this lab, for example `C:\TerraformLabs\Lab01`.
+1. From the **File** menu in VS Code, choose **Open Folder**.
 
-1. In VS Code, select **File → Open Folder…** and open the folder you just created.
+   ![](../../images/vsc-open-folder.png)
 
-1. Open the integrated terminal (**Terminal → New Terminal**) and verify Terraform is installed:
+1. Select the **TerraformLabs** folder and click **Select folder**.
+
+   ![](../../images/vsc-select-folder-terraformlabs-01.png)
+
+1. Now you will see another screen Do you trust the authors of the files in this folder?. Select the **checkbox (1)** *Trust the authors of all files in the parent folder 'azureuser'* and then click **Yes, I trust the authors (2)**.
+
+   ![](../../images/vsc-trust-folder-terraformlabs-01.png)
+
+1. Open the integrated terminal by selecting **Terminal → New Terminal**.
+
+   ![](../../images/vsc-terraform-lab-new-terminal.png)
+
+1. In the integrated terminal, verify that Terraform is installed by running the following command:
 
    ```bash
    terraform version
    ```
 
-   You should see **Terraform v1.9.x** or later.
+   This command displays the currently installed Terraform CLI version. You should see **Terraform version 1.9.x** or later installed in the environment.
 
-> **Note:** All `terraform` commands in this workshop are run from the **Azure Cloud Shell** (Bash). Use **View → Command Palette → Azure Terraform: Push** to sync your local files to Cloud Shell before running any Terraform command. The first time you do this from a new folder you will be prompted to open the Cloud Shell web application — select **Open** to continue.
+   ![](../../images/vsc-terraform-version-01.png)
 
 ---
 
-## Task 2: Configure the AzureRM provider
+## Task 2: Review the AzureRM provider configuration
 
-In this task you create `provider.tf`, which tells Terraform which cloud provider plugin to download and use. The **azurerm** provider is the official HashiCorp plugin for Microsoft Azure.
+In this task, you will review the Terraform provider configuration stored in the `provider.tf` file. 
 
-> **Note:** The `features {}` block is **required** by the AzureRM provider. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
+Terraform uses providers as plugins to communicate with cloud platforms and services. The AzureRM provider enables Terraform to create and manage Azure resources.
 
-1. In VS Code, create a new file named **`provider.tf`** in your lab folder.
+> **Note:** The `features {}` block is **required** by the AzureRM provider, even when no features are explicitly configured. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
 
-1. Paste the following code into `provider.tf` and save the file (`Ctrl+S`):
+1. In VS Code, open the **Terraform/01 - Basics/Code** folder in the **TerraformLabs** directory.
+
+   ![](../../images/vsc-terraform-01-basics-code.png)
+
+1. Open the `provider.tf` file and review the configuration:
 
    ```terraform
    terraform {
@@ -67,21 +96,32 @@ In this task you create `provider.tf`, which tells Terraform which cloud provide
 
    provider "azurerm" {
      features {}
+
+     resource_provider_registrations = "none"
    }
    ```
 
-   Key points:
-   - `required_providers` pins the AzureRM provider version.
-   - `required_version` ensures Terraform CLI is at least 1.9.
-   - `features {}` is mandatory — always include it even if empty.
+   ![](../../images/vsc-terraform-01-basics-code-provider-tf-01.png)
+
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `required_providers` | Specifies the provider source and version Terraform should download |
+   | `required_version` | Ensures the environment uses Terraform CLI version 1.9.0 or later |
+   | `provider "azurerm"` | Configures the Azure Resource Manager provider |
+   | `features {}` | Mandatory block required by the AzureRM provider |
+   | `resource_provider_registrations = "none"` | Prevents automatic Azure resource provider registration |
 
 ---
 
-## Task 3: Declare input variables
+## Task 3: Define Reusable Terraform Variables
 
-In this task you create `variables.tf` and `terraform.tfvars` so that environment-specific values (resource group name and Azure region) are kept separate from resource definitions.
+In this task, you will review how Terraform variables are used to make configurations reusable and environment-independent.
 
-1. Create a new file named **`variables.tf`** and paste the following:
+Instead of hardcoding values directly into resource definitions, Terraform variables allow you to separate configuration data from infrastructure logic.
+
+You will define variables in `variables.tf` and assign values using `terraform.tfvars`.
+
+1. Open the **`variables.tf`** file and review the variable declarations:
 
    ```terraform
    variable "rg" {
@@ -94,36 +134,48 @@ In this task you create `variables.tf` and `terraform.tfvars` so that environmen
      description = "Azure region where resources will be deployed (e.g. eastus, westeurope)."
    }
    ```
+   
+   ![](../../images/vsc-terraform-01-basics-code-variables-tf.png)
 
-1. Create a new file named **`terraform.tfvars`** and fill in your values:
+   | Variable | Description |
+   |:--------|:-------------|
+   | `rg` | Stores the Azure Resource Group name |
+   | `location` | Stores the Azure region where resources will be deployed |
+   | `type = string` | Defines the variable datatype as text |
+   | `description` | Documents the purpose of the variable |
+
+1. Open the **`terraform.tfvars`** file and update the values:
 
    ```terraform
-   rg       = "my-lab-rg"    # Replace with your resource group name
-   location = "eastus"       # Replace with your Azure region
+   rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"    # Replace with your resource group name
+   location = "<inject key="Region"></inject>"       # Replace with your Azure region
    ```
+
+   ![](../../images/vsc-terraform-01-basics-code-terraform-tfvars.png)
 
    > **Note:** `terraform.tfvars` is automatically loaded by Terraform at runtime. Never commit secret values to this file — use environment variables or Azure Key Vault for secrets (covered in Lab 04).
 
 ---
 
-## Task 4: Define the Virtual Network and Subnet
+## Task 4: Create the Azure Virtual Network Configuration
 
-In this task you create `vnet.tf`, which defines two resources: an Azure Virtual Network and a Subnet.
+In this task, you will define the Azure Virtual Network and subnet resources in Terraform.
 
-**Key VNet concepts:**
+**Azure Networking Concepts:**
 
 | Concept | Description |
 |:--------|:------------|
-| **Address space** | The private IP CIDR block for the entire VNet (e.g. `10.0.0.0/16`). |
+| **Address Space** | The private IP CIDR block for the entire VNet (e.g. `10.0.0.0/16`). |
 | **Subnet** | A logical subdivision of the VNet's address space. Resources are deployed into subnets. |
-| **Region scope** | A VNet lives in a single Azure region. Use VNet Peering to connect VNets across regions. |
+| **Region scope** | VNets exist within a single Azure region. |
+| **CIDR Notation** | Specifies IP ranges using slash notation such as `/16` or `/24`. |
 
-1. Create a new file named **`vnet.tf`** and paste the following:
+1. Open the **`vnet.tf`** and update the file configuration:
 
    ```terraform
    # Virtual Network
    resource "azurerm_virtual_network" "predayvnet" {
-     name                = "tfpreday-vnet"
+     name                = "tfpreday-vnet-<inject key="Deployment-ID"></inject>"
      location            = var.location
      resource_group_name = var.rg
      address_space       = ["10.0.0.0/16"]
@@ -138,26 +190,69 @@ In this task you create `vnet.tf`, which defines two resources: an Azure Virtual
    }
    ```
 
-   Key points:
-   - Subnets are declared as **separate `azurerm_subnet` resources** rather than inline blocks — this makes them independently referenceable.
-   - `address_prefixes` accepts a list of CIDR ranges.
-   - `azurerm_virtual_network.predayvnet.name` is a Terraform **expression** that creates an implicit dependency — Terraform will always create the VNet before the Subnet.
+   ![](../../images/vsc-terraform-01-basics-code-vnet-tf.png)
+
+   | Configuration | Description |
+   |:--------|:------------|
+   | `azurerm_virtual_network` | Creates an Azure Virtual Network |
+   | `address_space` | Defines the IP range available to the VNet |
+   | `azurerm_subnet` | Creates a subnet inside the VNet |
+   | `address_prefixes` | Defines the subnet IP range |
+   | `azurerm_virtual_network.predayvnet.name` | Creates an implicit dependency between the subnet and VNet |
 
 ---
 
-## Task 5: Initialize, plan, and apply the configuration
+## Task 5: Deploy the Infrastructure with Terraform
 
-In this task you run the three core Terraform commands to provision the infrastructure.
+In this task, you will authenticate to Azure and execute the Terraform workflow to deploy the infrastructure.
 
-1. Push your files to Azure Cloud Shell: **View → Command Palette → Azure Terraform: Push**.
+You will use the following Terraform commands through the labs:
 
-1. In Cloud Shell, navigate to your lab folder (it is synced under `~/clouddrive`):
+| Configuration | Description |
+|:--------|:------------|
+| `terraform init` | Downloads provider plugins |
+| `terraform plan` | Previews infrastructure changes |
+| `terraform apply` | Deploys resources to Azure |
 
-   ```bash
-   cd ~/clouddrive/Lab01
+1. Sign in to Azure from the integrated terminal:
+
+   ```
+   az login
    ```
 
-1. **Initialize** — download the AzureRM provider plugin:
+   > **Note:** You only need to sign in to Azure once in this lab. Keep using the same integrated terminal session for the upcoming labs so that your Azure authentication remains active.
+
+1. On the *Let’s get you signed in pop-up*, select **Work or school account**, then click **Continue**. You may need to minimize any open applications to bring this window into view.
+
+   ![](../../images/az-select-work-or-school-account.png)
+
+1. You'll see the Sign into Microsoft Azure tab. Here, enter your credentials:
+
+   - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
+  
+     ![](../../images/az-enter-username.png)
+  
+1. Next, enter the Temporary Access Pass:
+
+   - **Temporary Access Pass:** <inject key="AzureAdUserPassword"></inject>
+  
+     ![](../../images/az-enter-tap.png)
+
+1. On the *Sign in to all apps, websites, and services on this device?*, click **No, this app only**.
+
+   ![](../../images/az-no-this-app-only.png)
+
+1. You are now signed in to the Azure portal from your Visual Studio Code terminal. When prompted to select a subscription and tenant, press **Enter** to accept the default selection.
+
+   ![](../../images/az-select-subs-enter-01.png)
+
+1. Navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\01 - Basics\Code` directory:
+
+   ```
+   cd 'C:\Users\azureuser\TerraformLabs\Terraform\01 - Basics\Code'
+   ```
+
+1. Initialize the Terraform working directory:
 
    ```bash
    terraform init
@@ -165,7 +260,9 @@ In this task you run the three core Terraform commands to provision the infrastr
 
    You should see: `Terraform has been successfully initialized!`
 
-1. **Plan** — preview the changes without deploying:
+   ![](../../images/vsc-01-terraform-init-01.png)
+
+1. Generate an execution plan:
 
    ```bash
    terraform plan -out tfplan
@@ -177,29 +274,46 @@ In this task you run the three core Terraform commands to provision the infrastr
    Plan: 2 to add, 0 to change, 0 to destroy.
    ```
 
-   You should see two resources to be created: `azurerm_virtual_network.predayvnet` and `azurerm_subnet.predaysubnet`.
+   ![](../../images/vsc-01-terraform-plan-01.png)
 
-1. **Apply** — deploy the resources to Azure:
+   You should see the following resources listed:
+   - `azurerm_virtual_network.predayvnet`
+   - `azurerm_subnet.predaysubnet`
+
+1. Apply the Terraform configuration:
 
    ```bash
    terraform apply tfplan
    ```
 
-   After a short wait you should see:
+   Expected output:
 
    ```
    Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
    ```
 
-1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your resource group — you should see **tfpreday-vnet** with subnet **subnet1**.
+   ![](../../images/vsc-01-terraform-apply-01.png)
 
-> **Note:** Terraform is **idempotent**. If you run `terraform plan` again immediately after a successful apply, it will report `No changes. Infrastructure is up-to-date.`
+1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group — you should see **tfpreday-vnet-<inject key="Deployment-ID"></inject>** Virtual Network with subnet **subnet1**.
+
+   ![](../../images/01-azure-vnet-subnet-01.png)
+
+   > **Note:** Terraform is **idempotent**. Running terraform plan again after deployment should return - **No changes. Infrastructure is up-to-date.**
 
 ---
 
 ## Summary
 
-In this lab you set up your Terraform environment, configured the AzureRM provider using the modern `required_providers` block, introduced input variables with `variables.tf` and `terraform.tfvars`, defined an Azure Virtual Network and a Subnet using `azurerm_subnet` as a standalone resource, and completed the full `init → plan → apply` Terraform workflow.
+In this lab, you completed the following:
 
-### Click **Next >>** to proceed to Lab 02 — Variables.
+- Configured the Terraform development environment and Azure provider
+- Created reusable Terraform configurations using variables
+- Deployed an Azure Virtual Network and subnet using Terraform
+- Authenticated Terraform to Azure and deployed the infrastructure using the Terraform `init`, `plan`, and `apply` workflow
+- Verified the deployed resources in the Azure portal
 
+---
+
+You have successfully completed the lab. Click **Next >>** in the lower-right corner to proceed to the next lab.
+
+![](../../images/terraform-lab-next.png)
