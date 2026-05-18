@@ -2,6 +2,10 @@
  
 ### Estimated Duration: 45 Minutes
 
+## Scenario
+
+Contoso wants infrastructure deployments to become reusable and configurable across environments. In this lab, you will introduce Terraform variables and deploy a Linux Virtual Machine with a Network Interface inside the existing Virtual Network.
+
 ## Overview
 
 In this lab, you will extend the infrastructure created in Lab 01 by adding a Network Interface (NIC) and a Linux Virtual Machine (VM). You will use Terraform input variables to parameterize the configuration, reference existing Azure resources using data sources, and understand how Terraform automatically builds resource dependencies through expressions and references.
@@ -257,3 +261,9 @@ In this lab, you completed the following:
 - Configured Terraform variables for reusable and secure deployments
 - Deployed the infrastructure using the Terraform `init`, `plan`, and `apply` workflow
 - Verified the deployed infrastructure in the Azure portal
+
+---
+
+You have successfully completed the lab. Click **Next >>** in the lower-right corner to proceed to the next lab.
+
+![](../../images/terraform-lab-next.png)
