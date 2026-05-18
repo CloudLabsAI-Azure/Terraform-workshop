@@ -89,7 +89,7 @@ Welcome to your Infrastructure as Code with Terraform Workshop! We've prepared a
 
 Once you're ready to dive in, your virtual machine and lab guide will be right at your fingertips within your web browser.
 
-![](../images/migrate-aks-lab-guide.png)
+![](../images/terraform-lab-guide.png)
 
 ### Virtual Machine & Lab Guide
 
