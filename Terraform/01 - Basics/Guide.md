@@ -2,6 +2,10 @@
 
 ### Estimated Duration: 30 Minutes
 
+## Scenario
+
+Contoso needs a foundational Azure networking environment for its new cloud workloads. In this lab, you will create a Resource Group, Virtual Network, and Subnet using basic Terraform configurations and learn the core Terraform workflow (init, plan, and apply).
+
 ## Overview
 
 In this lab, you will use Terraform to provision the foundational components of Azure networking by creating a Virtual Network (VNet) and subnet. You will configure the AzureRM provider, define reusable input variables, write infrastructure resources using HashiCorp Configuration Language (HCL), and execute the core Terraform workflow: `init` → `plan` → `apply`.
@@ -308,3 +312,8 @@ In this lab, you completed the following:
 - Authenticated Terraform to Azure and deployed the infrastructure using the Terraform `init`, `plan`, and `apply` workflow
 - Verified the deployed resources in the Azure portal
 
+---
+
+You have successfully completed the lab. Click **Next >>** in the lower-right corner to proceed to the next lab.
+
+![](../../images/terraform-lab-next.png)
