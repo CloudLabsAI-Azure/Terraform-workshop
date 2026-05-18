@@ -2,6 +2,10 @@
 
 ### Estimated Duration: 60 Minutes
 
+## Scenario
+
+Contoso now wants to standardize deployments using reusable Terraform modules for faster and consistent provisioning. In this lab, you will refactor the infrastructure into a reusable `azvm` module and deploy separate frontend and database tiers using the same module with different inputs.
+
 ## Overview
 
 In this lab, you will refactor the infrastructure created in previous labs into a reusable Terraform module. Terraform modules allow you to package related resources into reusable components that can be deployed multiple times using different input values.
@@ -541,3 +545,5 @@ In this lab, you completed the following:
 In this workshop, you used Terraform to provision and manage Azure infrastructure using Infrastructure as Code (IaC) principles. You deployed Virtual Networks, Subnets, Network Interfaces, Network Security Groups, and Linux Virtual Machines while learning Terraform workflows, variables, helper functions, dynamic blocks, and resource dependencies.
 
 You also implemented secure secrets management using Azure Key Vault, generated reusable infrastructure using Terraform modules, and deployed multiple infrastructure tiers from a single reusable module source. Throughout the labs, you applied Terraform best practices for automation, modularity, scalability, security, and maintainability on Microsoft Azure.
+
+---
