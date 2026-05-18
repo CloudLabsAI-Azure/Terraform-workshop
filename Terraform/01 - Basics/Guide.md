@@ -305,6 +305,6 @@ In this lab, you completed the following:
 - Configured the Terraform development environment and Azure provider
 - Created reusable Terraform configurations using variables
 - Deployed an Azure Virtual Network and subnet using Terraform
-- Authenticated Terraform to Azure and executed the `init`, `plan`, and `apply` workflow
+- Authenticated Terraform to Azure and deployed the infrastructure using the Terraform `init`, `plan`, and `apply` workflow
 - Verified the deployed resources in the Azure portal
 
