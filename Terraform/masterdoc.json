@@ -5,27 +5,27 @@
         "BaseURL": "https://github.com/CloudLabsAI-Azure/Terraform-workshop",
         "Files": [
              {
-                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/lab-updates/Terraform/Overview.md",
+                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/master/Terraform/Overview.md",
                 "Order": 1
              },
              {
-                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/lab-updates/Terraform/01%20-%20Basics/Guide.md",
+                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/master/Terraform/01%20-%20Basics/Guide.md",
                 "Order": 2
              },
              {
-                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/lab-updates/Terraform/02%20-%20Variables/Guide.md",
+                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/master/Terraform/02%20-%20Variables/Guide.md",
                 "Order": 3
              },
              {
-                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/lab-updates/Terraform/03%20-%20Helpers/Guide.md",
+                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/master/Terraform/03%20-%20Helpers/Guide.md",
                 "Order": 4
              },
              {
-                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/lab-updates/Terraform/04%20-%20Security/Guide.md",
+                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/master/Terraform/04%20-%20Security/Guide.md",
                 "Order": 5
              },
              {
-                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/lab-updates/Terraform/05%20-%20Reusability/Guide.md",
+                "RawFilePath": "https://raw.githubusercontent.com/CloudLabsAI-Azure/Terraform-workshop/refs/heads/master/Terraform/05%20-%20Reusability/Guide.md",
                 "Order": 6
              }
         ]
