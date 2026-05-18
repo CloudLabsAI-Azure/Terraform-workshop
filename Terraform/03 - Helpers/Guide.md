@@ -1,32 +1,32 @@
-﻿# Lab 03: Helpers & Iterators â€” Network Security Groups with Dynamic Rules
+﻿# Lab 03: Helpers & Iterators — Network Security Groups with Dynamic Rules
 
 ### Estimated Duration: 45 Minutes
 
 ## Overview
 
-In this lab you will extend the infrastructure from Lab 02 by adding a second **web-tier subnet** and securing it with a **Network Security Group (NSG)**. You will learn to use Terraform's `dynamic` block with `for_each` to iterate over a list-of-objects variable and generate N security rules from a single code block, and use built-in HCL string functions (`lower()`, `title()`) to normalize values. You will also add resource **tags** across all resources for governance and cost tracking.
+In this lab you will extend the infrastructure from Lab 02 by adding a second **web-tier** subnet and securing it with a **Network Security Group (NSG)**. You will use Terraform `dynamic` blocks with `for_each` to generate multiple NSG rules from a single reusable configuration and apply resource tags for governance and cost tracking.
 
 ## Lab Objectives
 
 You will be able to complete the following tasks:
 
-- Task 1: Update Virtual Network configuration
-- Task 2: Update the Network Interface
-- Task 3: Update the Linux Virtual Machine
-- Task 4: Add and populate variables
-- Task 5: Plan and apply the full configuration
+- Task 1: Extend the Network Architecture
+- Task 2: Update the Virtual Machine Network Interface
+- Task 3: Apply Tags to the Virtual Machine Configuration
+- Task 4: Configure Dynamic Security Rules and Tags
+- Task 5: Import Existing Resources and Deploy Changes
 
 ---
 
-## Task 1: Update Virtual Network configuration
+## Task 1: Extend the Network Architecture
 
-In this task you add a second subnet representing the web tier of a typical three-tier architecture.
+In this task you will add a dedicated web-tier subnet, create a Network Security Group (NSG) with dynamically generated security rules, and associate the NSG with the web subnet.
 
 1. In VS Code, open the **Terraform/03 - Helpers/code** folder in the **TerraformLabs** directory.
 
    ![](../../images/vsc-terraform-03-helpers-code.png)
 
-1. Open the `vnet.tf` and update the file with the following code:
+1. Open the `vnet.tf` and update it with the following configuration:
 
    ```terraform
    # Virtual Network
@@ -86,23 +86,27 @@ In this task you add a second subnet representing the web tier of a typical thre
 
    ![](../../images/vsc-terraform-03-helpers-code-vnet-tf-01.png)
 
-   > **Note:** NSG associations are managed through the dedicated `azurerm_subnet_network_security_group_association` resource (added in Task 4), not via an attribute on the subnet.
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `azurerm_virtual_network` | Creates the Azure Virtual Network and applies tags using `var.tags` |
+   | `azurerm_subnet.predaysubnet` | Creates the default subnet used by the VM workload |
+   | `azurerm_subnet.predaywebsubnet` | Creates a second subnet representing the web tier |
+   | `dynamic "security_rule"` | Dynamically generates one NSG rule block for each object in the input collection |
+   | `for_each = var.security_group_rules` | Iterates through the NSG rule objects defined in `terraform.tfvars` |
+   | `security_rule.value.<property>` | Accesses properties from the current object during iteration |
+   | `lower()` | Converts values such as `"HTTP"` to lowercase (`"http"`) |
+   | `title()` | Converts values such as `"inbound"` to title case (`"Inbound"`) |
+   | `azurerm_subnet_network_security_group_association` | Associates the NSG with the web subnet using a dedicated resource. |
 
-   - Add a webtier subnet: add a second subnet representing the web tier of a typical three-tier architecture.
-   - Add a NSG:
-     Key concepts:
-     - `dynamic "security_rule"` tells Terraform to generate one `security_rule` block per element of the collection.
-     - `for_each = var.security_group_rules` iterates over the list defined in `terraform.tfvars`.
-     - `security_rule.value.name` accesses the `name` field of each element.
-     - `lower()` ensures the rule name is always lowercase (e.g. `"HTTP"` â†’ `"http"`).
-     - `title()` capitalizes the first letter (e.g. `"inbound"` â†’ `"Inbound"`), matching the value Azure's API expects.
-   - Associate the NSG with the web subnet: 
+   > **Note:** NSG associations are managed using the `azurerm_subnet_network_security_group_association` resource instead of the deprecated `network_security_group_id` attribute on the subnet resource.
 
 ---
 
-## Task 2: Update the Network Interface
+## Task 2: Update the Virtual Machine Network Interface
 
-1. Open the `nic.tf` and update the file
+In this task you will update the Network Interface configuration and apply tags to the resource.
+
+1. Open the `nic.tf` and and update the configuration:
 
    ```
    # Network Interface
@@ -123,11 +127,19 @@ In this task you add a second subnet representing the web tier of a typical thre
 
    ![](../../images/vsc-terraform-03-helpers-code-nic-tf.png)
 
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `subnet_id` | Connects the NIC to the default subnet |
+   | `private_ip_address_allocation = "Dynamic"` | Configures Azure to dynamically assign a private IP address |
+   | `tags = var.tags` | Applies standardized tags to the NIC resource |
+
 ---
 
-## Task 3: Update the Linux Virtual Machine
+## Task 3: Apply Tags to the Virtual Machine Configuration
 
-1. Open the vm.tf and update the code:
+In this task you will update the Virtual Machine configuration and apply resource tags.
+
+1. Open the vm.tf and update the configuration:
 
    ```
    # Linux Virtual Machine
@@ -161,13 +173,20 @@ In this task you add a second subnet representing the web tier of a typical thre
 
    ![](../../images/vsc-terraform-03-helpers-code-vm-tf.png)
 
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `network_interface_ids` | Attaches the VM to the previously created NIC |
+   | `admin_password = var.admin_password` | Retrieves the VM password from an input variable instead of hard-coding it |
+   | `source_image_reference` | Defines the Ubuntu 22.04 LTS marketplace image |
+   | `tags = var.tags` | Applies governance and cost-tracking tags to the VM |
+
 ---
 
-## Task 4: Add and populate variables
+## Task 4: Configure Dynamic Security Rules and Tags
 
-Rather than hard-coding security rules, you will store them as a structured variable so they can be changed without touching the resource definition.
+In this task, you will define structured Terraform variables for NSG rules and tags.
 
-1. Open `variables.tf` and add the following variables (or ensure they are present):
+1. Open the `variables.tf` and and ensure it contains the following variables:
 
    ```terraform
    variable "rg" {
@@ -206,7 +225,15 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-terraform-03-helpers-code-variables-tf-01.png)
 
-1. Open `terraform.tfvars` and add the values:
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `rg` | Defines the target Azure Resource Group name |
+   | `location` | Specifies the Azure deployment region |
+   | `admin_password` | Stores the VM administrator password securely |
+   | `security_group_rules` | Defines a reusable list of NSG rule objects |
+   | `tags` | Stores reusable tags applied across all resources |
+
+1. Open the `terraform.tfvars` and and add the following values:
 
    ```terraform
    rg             = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"
@@ -249,31 +276,21 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-terraform-03-helpers-code-terraform-tfvars.png)
 
-   NSG rules in Azure are evaluated in **ascending priority order** (lower number = higher priority). The Allow rules for HTTP (100) and HTTPS (150) are evaluated before the Deny-all rule (200).
+   | Configuration | Description |
+   |:--------|:-------------|
+   | `http` | Allows inbound HTTP traffic on port 80 |
+   | `https` | Allows inbound HTTPS traffic on port 443 |
+   | `deny-the-rest` | Denies all remaining inbound traffic |
 
-1. Confirm `provider.tf` uses the modern `required_providers` block:
-
-   ```terraform
-   terraform {
-     required_providers {
-       azurerm = {
-         source  = "hashicorp/azurerm"
-         version = "~> 4.0"
-       }
-     }
-     required_version = ">= 1.9.0"
-   }
-
-   provider "azurerm" {
-     features {}
-
-     resource_provider_registrations = "none"
-   }
-   ```
+   > **Note:** Azure evaluates NSG rules in ascending priority order. Lower priority numbers are processed first.
 
 ---
 
-## Task 6: Plan and apply
+## Task 5: Import Existing Resources and Deploy Changes
+
+In this task, you will import existing Azure resources into the Terraform state file, allowing Terraform to manage the infrastructure and apply future configuration changes safely.
+
+> **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
 
 1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code` directory:
 
@@ -281,7 +298,7 @@ Rather than hard-coding security rules, you will store them as a structured vari
    cd 'C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code'
    ```
    
-1. **Initialize** — download the AzureRM provider plugin:
+1. Initialize the Terraform working directory:
 
    ```bash
    terraform init
@@ -291,7 +308,7 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-03-terraform-init.png)
 
-1. Import the existing azure resources into the Terraform state to plan the additional deployments.
+1. Import the existing Virtual Machine resource into Terraform state:
 
    ```
    terraform import azurerm_linux_virtual_machine.predayvm "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Compute/virtualMachines/tfpreday-vm-<inject key="Deployment-ID"></inject>"
@@ -299,11 +316,15 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-03-terraform-import-vm.png)
 
+1. Import the existing Network Interface resource into Terraform state:
+
    ```
    terraform import azurerm_network_interface.predaynic "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/networkInterfaces/tfpreday-nic-<inject key="Deployment-ID"></inject>"
    ```
 
    ![](../../images/vsc-03-terraform-import-nic.png)
+
+1. Import the existing Virtual Network resource into Terraform state:
 
    ```
    terraform import azurerm_virtual_network.predayvnet "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>"
@@ -311,19 +332,21 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-03-terraform-import-vnet.png)
 
+1. Import the existing subnet resource into Terraform state:
+
    ```
    terraform import azurerm_subnet.predaysubnet "/subscriptions/<inject key="AzureSubscriptionID"></inject>/resourceGroups/IaC-Terraform-RG-<inject key="Deployment-ID"></inject>/providers/Microsoft.Network/virtualNetworks/tfpreday-vnet-<inject key="Deployment-ID"></inject>/subnets/subnet1"
    ```
 
    ![](../../images/vsc-03-terraform-import-subnet.png)
 
-1. Plan:
+1. Generate an execution plan:
 
    ```bash
    terraform plan -out tfplan
    ```
 
-   Expected result:
+   Expected output:
 
    ```
    Plan: 3 to add, 1 to change, 0 to destroy.
@@ -331,9 +354,13 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-03-terraform-plan.png)
 
-   The 3 additions are: `predaywebsubnet`, `predaysg` (NSG), and `azurerm_subnet_network_security_group_association`. The 1 change is the VNet gaining tags.
+   You should see the following resources in the execution plan:
+   - `azurerm_subnet.predaywebsubnet`
+   - `azurerm_network_security_group.predaysg`
+   - `azurerm_subnet_network_security_group_association.preday`
+   - `azurerm_virtual_network.predayvnet` (updated with tags)
 
-1. Apply:
+1. Apply the Terraform configuration:
 
    ```bash
    terraform apply tfplan
@@ -341,7 +368,7 @@ Rather than hard-coding security rules, you will store them as a structured vari
 
    ![](../../images/vsc-03-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your resource group and verify:
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group and verify:
    - A new subnet **web** (`10.0.2.0/24`) exists in the VNet.
    - A new NSG **web-nsg** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
    - The NSG is associated with the **web** subnet.
@@ -349,10 +376,15 @@ Rather than hard-coding security rules, you will store them as a structured vari
    ![](../../images/03-azure-resources-nsg.png)
 
    ![](../../images/03-azure-resources-subnet-nsg-association.png)
+   
 ---
 
 ## Summary
 
-In this lab you added a web-tier subnet, created a Network Security Group with dynamically generated rules using Terraform's `dynamic` block and `for_each`, used the `lower()` and `title()` helper functions for value normalization, and applied resource tags across all infrastructure. You also learned that NSG-to-subnet associations use the dedicated `azurerm_subnet_network_security_group_association` resource.
+In this lab, you completed the following:
 
-### Click **Next >>** to proceed to Lab 04 â€” Security with Azure Key Vault.
+- Extended the existing network architecture with a web-tier subnet
+- Updated the Virtual Machine Network Interface configuration
+- Applied reusable tags to the Virtual Machine configuration
+- Configured dynamic Network Security Group rules using dynamic blocks and for_each
+- Imported existing Azure resources into Terraform state and deployed infrastructure changes safely
