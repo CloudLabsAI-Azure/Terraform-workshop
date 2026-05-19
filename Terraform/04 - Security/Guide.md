@@ -2,11 +2,11 @@
 
 ### Estimated Duration: 60 Minutes
 
-## Scenario
+## 📘 Scenario
 
 Contoso's security team requires all secrets and passwords to be centrally managed instead of stored in code. In this lab, you will generate a secure password, store it in Azure Key Vault, and retrieve it securely in Terraform to provision infrastructure without exposing secrets.
 
-## Overview
+## 📖 Overview
 
 In real-world Infrastructure as Code (IaC) projects, infrastructure often depends on sensitive values such as passwords, API keys, certificates, and connection strings. Storing these secrets directly in Terraform files or source control creates a major security risk.
 
@@ -17,7 +17,7 @@ The lab is divided into two parts:
 - **Part 1** - Generate and store a secure password in Azure Key Vault
 - **Part 2** - Retrieve the stored secret and use it as the VM administrator password
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -192,8 +192,6 @@ In this task you will generate a secure password and store it as a secret in Azu
    ```
 
    ![](../../images/vsc-terraform-04-security-code-1-terraform-tfvars.png)
-
-   > **Note:** To get your tenant ID, run `az account show --query tenantId -o tsv` in Azure Cloud Shell.
 
 ---
 
@@ -481,7 +479,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
 In this task you will import the existing resources into Terraform state and deploy the updated configuration.
 
-> **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
+> ⚠️ **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
 
 1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\04 - Security\Code - Part 2` directory:
 
@@ -564,7 +562,7 @@ In this task you will import the existing resources into Terraform state and dep
 
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 
