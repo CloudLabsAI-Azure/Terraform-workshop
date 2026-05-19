@@ -2,11 +2,11 @@
 
 ### Estimated Duration: 60 Minutes
 
-## Scenario
+## 📘 Scenario
 
 Contoso now wants to standardize deployments using reusable Terraform modules for faster and consistent provisioning. In this lab, you will refactor the infrastructure into a reusable `azvm` module and deploy separate frontend and database tiers using the same module with different inputs.
 
-## Overview
+## 📖 Overview
 
 In this lab, you will refactor the infrastructure created in previous labs into a reusable Terraform module. Terraform modules allow you to package related resources into reusable components that can be deployed multiple times using different input values.
 
@@ -23,7 +23,7 @@ You will then call the module twice from the root configuration to deploy:
 - A frontend web tier
 - A database tier
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -77,7 +77,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `modules/azvm/vm.tf` | Creates the Linux virtual machine |
    | `modules/azvm/outputs.tf` | Returns useful values back to the root configuration |
 
-   > **Note:** Terraform modules use the same HCL syntax as root configurations. The `variables.tf` file defines the public interface of the module.
+   > 📌 **Note:** Terraform modules use the same HCL syntax as root configurations. The `variables.tf` file defines the public interface of the module.
 
 ---
 
@@ -229,7 +229,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `lower()` | Converts rule names to lowercase |
    | `title()` | Capitalizes protocol values |
 
-   > **Note:** For `web001`, the `regex()` function returns `web`. For `mysql001`, it returns `mysql`.
+   > 📌 **Note:** For `web001`, the `regex()` function returns `web`. For `mysql001`, it returns `mysql`.
    
 1. Open the `modules/azvm/nic.tf` file and review the configuration:
 
@@ -457,9 +457,9 @@ In this task, you will call the same module twice to deploy two independent infr
    | `source` | Specifies the module location |
    | `subnet_cidr` | Assigns a unique subnet range per module instance |
 
-   > **Note:** Each module instance provisions an independent set of resources using the same reusable module code.
+   > 📌 **Note:** Each module instance provisions an independent set of resources using the same reusable module code.
 
-   > **Note:** You can also reference module outputs in root configuration. For example:
+   > 📌 **Note:** You can also reference module outputs in root configuration. For example:
 
      ```terraform
      output "frontend_ip" {
@@ -527,7 +527,7 @@ In this task, you will deploy the reusable infrastructure using Terraform module
 
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 
@@ -540,10 +540,12 @@ In this lab, you completed the following:
 - Reduced code duplication and improved infrastructure maintainability
 - Deployed infrastructure using the Terraform module workflow
 
-### You have successfully completed all five Terraform labs!
+---
 
-In this workshop, you used Terraform to provision and manage Azure infrastructure using Infrastructure as Code (IaC) principles. You deployed Virtual Networks, Subnets, Network Interfaces, Network Security Groups, and Linux Virtual Machines while learning Terraform workflows, variables, helper functions, dynamic blocks, and resource dependencies.
+### 🎉 You have successfully completed all five Terraform labs!
 
-You also implemented secure secrets management using Azure Key Vault, generated reusable infrastructure using Terraform modules, and deployed multiple infrastructure tiers from a single reusable module source. Throughout the labs, you applied Terraform best practices for automation, modularity, scalability, security, and maintainability on Microsoft Azure.
+In this workshop, you used **Terraform** to provision and manage **Azure infrastructure** using **Infrastructure as Code (IaC)** principles. You deployed **Virtual Networks**, **Subnets**, **Network Interfaces**, **Network Security Groups**, and **Linux Virtual Machines** while learning **Terraform workflows**, **variables**, **helper functions**, **dynamic blocks**, and **resource dependencies**.
+
+You also implemented secure **secrets management** using **Azure Key Vault**, generated reusable infrastructure using **Terraform modules**, and deployed multiple infrastructure tiers from a single reusable module source. Throughout the labs, you applied Terraform best practices for **automation**, **modularity**, **scalability**, **security**, and **maintainability** on **Microsoft Azure**.
 
 ---
