@@ -2,15 +2,15 @@
 
 ### Estimated Duration: 45 Minutes
 
-## Scenario
+## 📘 Scenario
 
 As Contoso expands its application architecture into multiple tiers, the infrastructure must include network security controls. In this lab, you will create a web-tier subnet, configure a Network Security Group (NSG) with dynamic rules using iterators, and apply standardized resource tags.
 
-## Overview
+## 📖 Overview
 
 In this lab you will extend the infrastructure from Lab 02 by adding a second **web-tier** subnet and securing it with a **Network Security Group (NSG)**. You will use Terraform `dynamic` blocks with `for_each` to generate multiple NSG rules from a single reusable configuration and apply resource tags for governance and cost tracking.
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -102,7 +102,7 @@ In this task you will add a dedicated web-tier subnet, create a Network Security
    | `title()` | Converts values such as `"inbound"` to title case (`"Inbound"`) |
    | `azurerm_subnet_network_security_group_association` | Associates the NSG with the web subnet using a dedicated resource. |
 
-   > **Note:** NSG associations are managed using the `azurerm_subnet_network_security_group_association` resource instead of the deprecated `network_security_group_id` attribute on the subnet resource.
+   > 📌 **Note:** NSG associations are managed using the `azurerm_subnet_network_security_group_association` resource instead of the deprecated `network_security_group_id` attribute on the subnet resource.
 
 ---
 
@@ -286,7 +286,7 @@ In this task, you will define structured Terraform variables for NSG rules and t
    | `https` | Allows inbound HTTPS traffic on port 443 |
    | `deny-the-rest` | Denies all remaining inbound traffic |
 
-   > **Note:** Azure evaluates NSG rules in ascending priority order. Lower priority numbers are processed first.
+   > 📌 **Note:** Azure evaluates NSG rules in ascending priority order. Lower priority numbers are processed first.
 
 ---
 
@@ -294,7 +294,7 @@ In this task, you will define structured Terraform variables for NSG rules and t
 
 In this task, you will import existing Azure resources into the Terraform state file, allowing Terraform to manage the infrastructure and apply future configuration changes safely.
 
-> **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
+> ⚠️ **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
 
 1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code` directory:
 
@@ -383,7 +383,7 @@ In this task, you will import existing Azure resources into the Terraform state 
    
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 
