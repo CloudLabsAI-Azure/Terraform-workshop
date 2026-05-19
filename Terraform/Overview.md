@@ -2,13 +2,13 @@
 
 #### Overall Estimated Duration: 4 hours
 
-## Lab Scenario
+## 📘 Lab Scenario
 
 Contoso Ltd. is modernizing its infrastructure management practices by adopting **Infrastructure as Code (IaC)** with **Terraform** on **Microsoft Azure**. The cloud engineering team wants a repeatable and standardized way to deploy networking, virtual machines, security controls, and secrets management across environments.
 
 As a cloud engineer at Contoso, you will progressively build and enhance an Azure environment using Terraform. Starting with basic networking resources, you will introduce variables, dynamic security rules, Azure Key Vault integration, and finally reusable Terraform modules to deploy a scalable multi-tier architecture.
 
-## Overview
+## 📖 Lab Overview
 
 **Infrastructure as Code (IaC)** is a foundational practice in modern DevOps that enables teams to provision, configure, and manage infrastructure using declarative code instead of manual processes. In this hands-on workshop, you will use **HashiCorp Terraform** with the **AzureRM provider v4.x** to deploy and manage **Microsoft Azure** infrastructure resources.
 
@@ -18,7 +18,7 @@ You will learn how Terraform uses **HashiCorp Configuration Language (HCL)** to 
 
 By the end of this workshop, you will be able to write, validate, and deploy modular Terraform configurations that follow modern Infrastructure as Code best practices on Azure.
 
-## Objectives
+## 🎯 Objectives
 
 By the end of this hands-on workshop, you will be able to:
 
@@ -31,7 +31,7 @@ By the end of this hands-on workshop, you will be able to:
 - Build reusable Terraform modules for scalable deployments.
 - Deploy multiple infrastructure tiers from a single module source.
 
-## Prerequisites
+## ⚙️ Prerequisites
 
 **IMPORTANT:** All required tools, Terraform binaries, VS Code extensions, and lab files are already pre-installed and configured on the Lab-VM. **No additional setup is required.**
 
@@ -48,7 +48,7 @@ In addition, you will need the following tools installed on your local machine/L
 - **Azure CLI** - Used to authenticate to Azure and interact with Azure resources from the terminal.
 - **HashiCorp Terraform VS Code Extension** - Provides Terraform language support in VS Code, including syntax highlighting, validation, and IntelliSense.
 
-## Architechture
+## 🏗️ Architechture
 
 In this workshop, Terraform is used to provision and manage Azure infrastructure using reusable and modular configurations.
 
@@ -62,11 +62,11 @@ You will deploy Azure resources such as:
 
 In the final lab, you will refactor the infrastructure into reusable Terraform modules to deploy multiple infrastructure tiers from a single code base.
 
-## Architechture Diagram
+## 🖼️ Architechture Diagram
 
-![Terraform Workshop Architecture Progression](../images/terraform_architecture.png)
+![Terraform Workshop Architecture Progression](../images/terraform_architecture-diagram.png)
 
-## Explanation of Components
+## 🔍 Explanation of Components
 
 - **Terraform CLI** – Used to initialize, plan, and deploy Azure infrastructure.
 - **AzureRM Provider** – Terraform provider used to manage Azure resources.
@@ -81,7 +81,7 @@ In the final lab, you will refactor the infrastructure into reusable Terraform m
 - **Terraform Variables** – Used to parameterize infrastructure configurations.
 - **Terraform Modules** – Reusable Terraform configurations used for scalable deployments.
 
-## Getting Started with Lab
+## 🚀 Getting Started with Lab
 
 Welcome to your Infrastructure as Code with Terraform Workshop! We've prepared a seamless environment for you to migrate and modernize the iconic Spring Boot PetClinic application from local execution to Azure Kubernetes Service (AKS). You'll experience the complete modernization journey using AI-powered tools such as GitHub Copilot app modernization and Containerization Assist MCP Server. Let's begin by making the most of this experience.
 
@@ -119,7 +119,7 @@ To adjust the zoom level for the environment page, click the **A↕: 100%** icon
 
 ![](../images/terraform-lab-zoom.png)
 
-## Login to Azure portal
+## ☁️ Login to Azure portal
 
 1. On your virtual machine, click on the **Azure Portal** icon as shown below:
 
@@ -145,7 +145,7 @@ To adjust the zoom level for the environment page, click the **A↕: 100%** icon
 
 1. Use the **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"/></inject>** resource group for all Azure resources provisioned during the labs.
 
-## Support Contact
+## 📞 Support Contact
 
 The CloudLabs support team is available 24/7, 365 days a year, via email and live chat to ensure seamless assistance at any time. We offer dedicated support channels tailored specifically for both learners and instructors, ensuring that all your needs are promptly and efficiently addressed.
 
