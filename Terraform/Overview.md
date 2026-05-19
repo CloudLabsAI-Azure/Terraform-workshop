@@ -6,13 +6,13 @@
 
 Contoso Ltd. is modernizing its infrastructure management practices by adopting **Infrastructure as Code (IaC)** with **Terraform** on **Microsoft Azure**. The cloud engineering team wants a repeatable and standardized way to deploy networking, virtual machines, security controls, and secrets management across environments.
 
-As a cloud engineer at Contoso, you will progressively build and enhance an Azure environment using Terraform. Starting with basic networking resources, you will introduce variables, dynamic security rules, Azure Key Vault integration, and finally reusable Terraform modules to deploy a scalable multi-tier architecture.
+As a cloud engineer at Contoso, you will progressively build and enhance an Azure environment using **Terraform**. Starting with basic networking resources, you will introduce variables, dynamic security rules, Azure Key Vault integration, and finally reusable **Terraform modules** to deploy a scalable multi-tier architecture.
 
 ## 📖 Lab Overview
 
 **Infrastructure as Code (IaC)** is a foundational practice in modern DevOps that enables teams to provision, configure, and manage infrastructure using declarative code instead of manual processes. In this hands-on workshop, you will use **HashiCorp Terraform** with the **AzureRM provider v4.x** to deploy and manage **Microsoft Azure** infrastructure resources.
 
-Throughout the five labs, you will progressively build a complete Terraform-based Azure environment, starting with a basic Virtual Network and Subnet, then extending the deployment with Virtual Machines, Network Security Groups (NSGs), dynamic configurations, Azure Key Vault integration, and reusable Terraform modules.
+Throughout the five labs, you will progressively build a complete **Terraform-based Azure environment**, starting with a basic Virtual Network and Subnet, then extending the deployment with Virtual Machines, Network Security Groups (NSGs), dynamic configurations, Azure Key Vault integration, and reusable **Terraform module**s.
 
 You will learn how Terraform uses **HashiCorp Configuration Language (HCL)** to define infrastructure, how to parameterize deployments using variables, how Terraform automatically builds resource dependency graphs, and how reusable modules simplify large-scale infrastructure deployments.
 
