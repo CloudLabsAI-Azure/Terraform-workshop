@@ -257,7 +257,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `private_ip_address_allocation` | Assigns a dynamic private IP address |
    | `tags` | Applies resource tags |
 
-1. Open the modules/azvm/vm.tf file and review the configuration:
+1. Open the `modules/azvm/vm.tf` file and review the configuration:
 
    ```terraform
    # Reference the Key Vault instance
@@ -310,7 +310,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `network_interface_ids` | Attaches the NIC to the VM |
    | `admin_password` | Uses the Key Vault secret value securely |
 
-1. Open the modules/azvm/outputs.tf file and review the configuration:
+1. Open the `modules/azvm/outputs.tf` file and review the configuration:
 
    ```terraform
    output "vm_id" {
@@ -343,7 +343,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
 
 In this task, you will call the same module twice to deploy two independent infrastructure tiers.
 
-1. Open the `main.tf` and update the configuration:
+1. Open the `main.tf` and update the configuration with the actual values:
 
    ```terraform
    locals {
@@ -513,17 +513,17 @@ In this task, you will deploy the reusable infrastructure using Terraform module
 
    ![](../../images/vsc-terraform-05-reusability-code-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your **IaC-Terraform-RG-<inject key="Deployment-ID"></inject>** resource group and verify that the following resources are created:
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify that the following resources are created:
    
-   - VNet **tf-reusable-vnet** with two subnets: **web** (`172.16.10.0/24`) and **mysql** (`172.16.20.0/24`).
+   - VNet **tf-reusable-vnet-<inject key="Deployment-ID" enableCopy="false"></inject>** with two subnets: **web** (`172.16.10.0/24`) and **mysql** (`172.16.20.0/24`).
    - Two NSGs: **nsg-web001** (HTTP/HTTPS rules) and **nsg-mysql001** (MySQL rule).
    - Two VMs: **web001** and **mysql001**.
-  
+
+   ![](../../images/05-azure-resources-2-new-subnet.png)
+
    ![](../../images/05-azure-resources-2-new-nsg.png)
 
    ![](../../images/05-azure-resources-2-new-vm.png)
-
-   ![](../../images/05-azure-resources-2-new-subnet.png)
 
 ---
 
