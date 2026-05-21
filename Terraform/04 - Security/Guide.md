@@ -2,11 +2,11 @@
 
 ### Estimated Duration: 60 Minutes
 
-## Scenario
+## 📘 Scenario
 
 Contoso's security team requires all secrets and passwords to be centrally managed instead of stored in code. In this lab, you will generate a secure password, store it in Azure Key Vault, and retrieve it securely in Terraform to provision infrastructure without exposing secrets.
 
-## Overview
+## 📖 Overview
 
 In real-world Infrastructure as Code (IaC) projects, infrastructure often depends on sensitive values such as passwords, API keys, certificates, and connection strings. Storing these secrets directly in Terraform files or source control creates a major security risk.
 
@@ -17,7 +17,7 @@ The lab is divided into two parts:
 - **Part 1** - Generate and store a secure password in Azure Key Vault
 - **Part 2** - Retrieve the stored secret and use it as the VM administrator password
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -35,7 +35,7 @@ You will be able to complete the following tasks:
 
 In this task, you will configure Terraform to work with multiple providers. Each provider enables Terraform to interact with a different service.
 
-1. In VS Code, open the **Terraform/02 - Variables/Code - Part 1** folder in the **TerraformLabs** directory.
+1. In VS Code, open the **Terraform/04 - Security/Code - Part 1** folder in the **TerraformLabs** directory.
 
    ![](../../images/vsc-terraform-04-security-code-part-1.png)
 
@@ -193,8 +193,6 @@ In this task you will generate a secure password and store it as a secret in Azu
 
    ![](../../images/vsc-terraform-04-security-code-1-terraform-tfvars.png)
 
-   > **Note:** To get your tenant ID, run `az account show --query tenantId -o tsv` in Azure Cloud Shell.
-
 ---
 
 ### Task 3: Initialize and deploy the Key Vault secret configuration
@@ -231,6 +229,11 @@ In this task you will deploy the Key Vault access policy and secret.
 
    ![](../../images/vsc-terraform-04-security-code-1-terraform-plan-new.png)
 
+   You should see the following resources listed:
+   - `azurerm_key_vault_access_policy.lab04`
+   - `azurerm_key_vault_secret.lab04`
+   - `random_password.admin_pwd`
+
 1. Apply the Terraform configuration:
 
    ```bash
@@ -239,9 +242,9 @@ In this task you will deploy the Key Vault access policy and secret.
 
    ![](../../images/vsc-terraform-04-security-code-1-terraform-apply.png)
 
-1. Verify in the [Azure portal](https://portal.azure.com): navigate to your Key Vault → **Secrets** → confirm that **lab04admin** has been created.
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group → **keyvault-<inject key="Deployment-ID" enableCopy="false"></inject>** → **Secrets** → confirm that **lab04admin** has been created.
 
-   ![](../../images/04-azure-resources-key-vault-secret.png)
+   ![](../../images/04-azure-resources-key-vault-secret-new.png)
 
 ---
 
@@ -251,7 +254,7 @@ In this task you will deploy the Key Vault access policy and secret.
 
 In this task you will modify the VM deployment to retrieve the administrator password directly from Azure Key Vault.
 
-1. In VS Code, open the **Terraform/02 - Variables/Code - Part 2** folder in the **TerraformLabs** directory.
+1. In VS Code, open the **Terraform/04 - Security/Code - Part 2** folder in the **TerraformLabs** directory.
 
    ![](../../images/vsc-terraform-04-security-code-part-2.png)
 
@@ -429,7 +432,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
    ![](../../images/vsc-terraform-04-security-code-2-variables-tf.png)
 
-1. Open the `terraform.tfvars` update the values:
+1. Open the `terraform.tfvars` and update the values:
 
    ```terraform
    rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter your target resource group name
@@ -481,7 +484,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
 In this task you will import the existing resources into Terraform state and deploy the updated configuration.
 
-> **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
+> ⚠️ **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
 
 1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\04 - Security\Code - Part 2` directory:
 
@@ -531,7 +534,6 @@ In this task you will import the existing resources into Terraform state and dep
 
    ![](../../images/vsc-04-terraform-import-subnet.png)
 
-
 1. Generate an execution plan:
 
    ```bash
@@ -556,15 +558,15 @@ In this task you will import the existing resources into Terraform state and dep
 
    ![](../../images/vsc-terraform-04-security-code-2-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group and verify that the Network Security Group is created and is associated to the Subnet.
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify that the **default-nsg-<inject key="Deployment-ID" enableCopy="false"></inject>** Network Security Group is created and is associated to the **subnet1**.
 
-   ![](../../images/04-azure-resources-nsg.png)
+   ![](../../images/04-azure-resources-nsg-new.png)
 
-   ![](../../images/04-azure-resources-subnet-nsg-association.png)
+   ![](../../images/04-azure-resources-subnet-nsg-association-new.png)
 
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 

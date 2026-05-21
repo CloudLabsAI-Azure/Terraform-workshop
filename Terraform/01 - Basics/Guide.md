@@ -2,15 +2,15 @@
 
 ### Estimated Duration: 30 Minutes
 
-## Scenario
+## 📘 Scenario
 
 Contoso needs a foundational Azure networking environment for its new cloud workloads. In this lab, you will create a Resource Group, Virtual Network, and Subnet using basic Terraform configurations and learn the core Terraform workflow (init, plan, and apply).
 
-## Overview
+## 📖 Overview
 
 In this lab, you will use Terraform to provision the foundational components of Azure networking by creating a Virtual Network (VNet) and subnet. You will configure the AzureRM provider, define reusable input variables, write infrastructure resources using HashiCorp Configuration Language (HCL), and execute the core Terraform workflow: `init` → `plan` → `apply`.
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -37,9 +37,8 @@ In this task, you will prepare the local development environment required for Te
 1. In VS Code, ensure that the following extensions are installed:
    
    - [HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) — syntax highlighting, validation, and IntelliSense for `.tf` files.
-   - [Microsoft Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
   
-   ![](../../images/vsc-terraform-lab-extensions.png)
+   ![](../../images/vsc-terraform-lab-hashicorp-ext.png)
 
 1. From the **File** menu in VS Code, choose **Open Folder**.
 
@@ -75,7 +74,9 @@ In this task, you will review the Terraform provider configuration stored in the
 
 Terraform uses providers as plugins to communicate with cloud platforms and services. The AzureRM provider enables Terraform to create and manage Azure resources.
 
-> **Note:** The `features {}` block is **required** by the AzureRM provider, even when no features are explicitly configured. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
+> 📌 **Note:** The `features {}` block is **required** by the AzureRM provider, even when no features are explicitly configured. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
+>
+> 📌 **Note:** You will see a similar **`provider.tf`** configuration used consistently across all five lab folders throughout this workshop.
 
 1. In VS Code, open the **Terraform/01 - Basics/Code** folder in the **TerraformLabs** directory.
 
@@ -153,7 +154,7 @@ You will define variables in `variables.tf` and assign values using `terraform.t
 
    ![](../../images/vsc-terraform-01-basics-code-terraform-tfvars.png)
 
-   > **Note:** `terraform.tfvars` is automatically loaded by Terraform at runtime. Never commit secret values to this file — use environment variables or Azure Key Vault for secrets (covered in Lab 04).
+   > 📌 **Note:** `terraform.tfvars` is automatically loaded by Terraform at runtime. Never commit secret values to this file — use environment variables or Azure Key Vault for secrets (covered in Lab 04).
 
 ---
 
@@ -220,7 +221,7 @@ You will use the following Terraform commands through the labs:
    az login
    ```
 
-   > **Note:** You only need to sign in to Azure once in this lab. Keep using the same integrated terminal session for the upcoming labs so that your Azure authentication remains active.
+   > 📌 **Note:** You only need to sign in to Azure once in this lab. Keep using the same integrated terminal session for the upcoming labs so that your Azure authentication remains active.
 
 1. On the *Let’s get you signed in pop-up*, select **Work or school account**, then click **Continue**. You may need to minimize any open applications to bring this window into view.
 
@@ -242,7 +243,7 @@ You will use the following Terraform commands through the labs:
 
    ![](../../images/az-no-this-app-only.png)
 
-1. You are now signed in to the Azure portal from your Visual Studio Code terminal. When prompted to select a subscription and tenant, press **Enter** to accept the default selection.
+1. You are now signed in to the Azure portal from your Visual Studio Code terminal. In Visual Studio Code integrated terminal, when prompted to select a subscription and tenant, press **Enter** to accept the default selection.
 
    ![](../../images/az-select-subs-enter-01.png)
 
@@ -294,15 +295,15 @@ You will use the following Terraform commands through the labs:
 
    ![](../../images/vsc-01-terraform-apply-01.png)
 
-1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group — you should see **tfpreday-vnet-<inject key="Deployment-ID"></inject>** Virtual Network with subnet **subnet1**.
+1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group, you should see **tfpreday-vnet-<inject key="Deployment-ID" enableCopy="false"></inject>** Virtual Network with subnet **subnet1**.
 
-   ![](../../images/01-azure-vnet-subnet-01.png)
+   ![](../../images/01-azure-vnet-subnet-new.png)
 
-   > **Note:** Terraform is **idempotent**. Running terraform plan again after deployment should return - **No changes. Infrastructure is up-to-date.**
+   > 📌 **Note:** Terraform is **idempotent**. Running terraform plan again after deployment should return - **No changes. Infrastructure is up-to-date.**
 
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 

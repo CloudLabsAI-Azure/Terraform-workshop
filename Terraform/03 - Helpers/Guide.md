@@ -2,15 +2,15 @@
 
 ### Estimated Duration: 45 Minutes
 
-## Scenario
+## 📘 Scenario
 
 As Contoso expands its application architecture into multiple tiers, the infrastructure must include network security controls. In this lab, you will create a web-tier subnet, configure a Network Security Group (NSG) with dynamic rules using iterators, and apply standardized resource tags.
 
-## Overview
+## 📖 Overview
 
 In this lab you will extend the infrastructure from Lab 02 by adding a second **web-tier** subnet and securing it with a **Network Security Group (NSG)**. You will use Terraform `dynamic` blocks with `for_each` to generate multiple NSG rules from a single reusable configuration and apply resource tags for governance and cost tracking.
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -102,7 +102,7 @@ In this task you will add a dedicated web-tier subnet, create a Network Security
    | `title()` | Converts values such as `"inbound"` to title case (`"Inbound"`) |
    | `azurerm_subnet_network_security_group_association` | Associates the NSG with the web subnet using a dedicated resource. |
 
-   > **Note:** NSG associations are managed using the `azurerm_subnet_network_security_group_association` resource instead of the deprecated `network_security_group_id` attribute on the subnet resource.
+   > 📌 **Note:** NSG associations are managed using the `azurerm_subnet_network_security_group_association` resource instead of the deprecated `network_security_group_id` attribute on the subnet resource.
 
 ---
 
@@ -143,7 +143,7 @@ In this task you will update the Network Interface configuration and apply tags 
 
 In this task you will update the Virtual Machine configuration and apply resource tags.
 
-1. Open the vm.tf and update the configuration:
+1. Open the `vm.tf` and update the configuration:
 
    ```
    # Linux Virtual Machine
@@ -286,7 +286,7 @@ In this task, you will define structured Terraform variables for NSG rules and t
    | `https` | Allows inbound HTTPS traffic on port 443 |
    | `deny-the-rest` | Denies all remaining inbound traffic |
 
-   > **Note:** Azure evaluates NSG rules in ascending priority order. Lower priority numbers are processed first.
+   > 📌 **Note:** Azure evaluates NSG rules in ascending priority order. Lower priority numbers are processed first.
 
 ---
 
@@ -294,7 +294,7 @@ In this task, you will define structured Terraform variables for NSG rules and t
 
 In this task, you will import existing Azure resources into the Terraform state file, allowing Terraform to manage the infrastructure and apply future configuration changes safely.
 
-> **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
+> ⚠️ **Important:** A resource must be present in the Terraform state before Terraform can track, update, or manage it reliably.
 
 1. In the integrated terminal, navigate to the `C:\Users\azureuser\TerraformLabs\Terraform\03 - Helpers\code` directory:
 
@@ -362,7 +362,7 @@ In this task, you will import existing Azure resources into the Terraform state 
    - `azurerm_subnet.predaywebsubnet`
    - `azurerm_network_security_group.predaysg`
    - `azurerm_subnet_network_security_group_association.preday`
-   - `azurerm_virtual_network.predayvnet` (updated with tags)
+   - `azurerm_virtual_network.predayvnet`, `azurerm_network_interface.predaynic` and `azurerm_linux_virtual_machine.predayvm` (updated with tags)
 
 1. Apply the Terraform configuration:
 
@@ -372,18 +372,18 @@ In this task, you will import existing Azure resources into the Terraform state 
 
    ![](../../images/vsc-03-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group and verify:
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify:
    - A new subnet **web** (`10.0.2.0/24`) exists in the VNet.
-   - A new NSG **web-nsg** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
+   - A new NSG **web-nsg-<inject key="Deployment-ID" enableCopy="false"></inject>** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
    - The NSG is associated with the **web** subnet.
 
-   ![](../../images/03-azure-resources-nsg.png)
+   ![](../../images/03-azure-resources-nsg-new.png)
 
-   ![](../../images/03-azure-resources-subnet-nsg-association.png)
+   ![](../../images/03-azure-resources-subnet-nsg-association-new.png)
    
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 

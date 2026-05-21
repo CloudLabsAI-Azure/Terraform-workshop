@@ -2,15 +2,15 @@
  
 ### Estimated Duration: 45 Minutes
 
-## Scenario
+## 📘 Scenario
 
 Contoso wants infrastructure deployments to become reusable and configurable across environments. In this lab, you will introduce Terraform variables and deploy a Linux Virtual Machine with a Network Interface inside the existing Virtual Network.
 
-## Overview
+## 📖 Overview
 
 In this lab, you will extend the infrastructure created in Lab 01 by adding a Network Interface (NIC) and a Linux Virtual Machine (VM). You will use Terraform input variables to parameterize the configuration, reference existing Azure resources using data sources, and understand how Terraform automatically builds resource dependencies through expressions and references.
 
-## Lab Objectives
+## 🎯 Objectives
 
 You will be able to complete the following tasks:
 
@@ -56,7 +56,7 @@ In this task, you will reference the Virtual Network and subnet that were create
    | `data.azurerm_virtual_network.predayvnet.name` | Retrieves the name of the referenced Virtual Network |
    | `resource_group_name = var.rg` | Uses the input variable for the Resource Group name |
 
-   > **Note:** Terraform builds a dependency graph automatically using resource and data source references. Explicit `depends_on` statements are not required in this scenario.
+   > 📌 **Note:** Terraform builds a dependency graph automatically using resource and data source references. Explicit `depends_on` statements are not required in this scenario.
    
 ---
 
@@ -93,7 +93,7 @@ Every Azure VM requires at least one NIC to communicate over the network. The NI
    | `location = var.location` | Uses the deployment region from the variable |
    | `data.azurerm_subnet.predaysubnet.id` | References the subnet resource ID |
 
-   >**Note:** Terraform automatically creates the dependency chain: Virtual Network → Subnet → Network Interface.
+   > 📌 **Note:** Terraform automatically creates the dependency chain: Virtual Network → Subnet → Network Interface.
 
 ---
 
@@ -142,7 +142,7 @@ In this task, you will configure a Linux Virtual Machine and attach the previous
    | `source_image_reference` | Defines the Ubuntu image used for deployment |
    | `os_disk` | Configures the VM operating system disk |
 
-   > **Note:** Avoid hard-coding passwords directly in Terraform configuration files. In Lab 04, you will retrieve secrets securely from Azure Key Vault.
+   > 📌 **Note:** Avoid hard-coding passwords directly in Terraform configuration files. In Lab 04, you will retrieve secrets securely from Azure Key Vault.
 
 ---
 
@@ -190,7 +190,7 @@ In this task, you will define the required Terraform variables and assign enviro
 
    ![](../../images/vsc-terraform-02-variables-code-terraform-tfvars.png)
 
-   > **Note:** Add `terraform.tfvars` to `.gitignore` to avoid committing credentials or sensitive values to source control.
+   > 📌 **Note:** Add `terraform.tfvars` to `.gitignore` to avoid committing credentials or sensitive values to source control.
 
 ---
 
@@ -246,13 +246,13 @@ In this task, you will initialize the Terraform working directory, generate an e
 
    ![](../../images/vsc-02-terraform-apply-01.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your resource group and confirm VM, OS Disk and NIC resources were created.
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and confirm **Virtual Machine**, **Disk** and **Network Interface** resources were created.
 
-   ![](../../images/02-azure-resources-01.png)
+   ![](../../images/02-azure-resources-new.png)
 
 ---
 
-## Summary
+## 🧾 Summary
 
 In this lab, you completed the following:
 
