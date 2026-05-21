@@ -99,13 +99,13 @@ Your virtual machine is your workhorse throughout the workshop. The lab **Guide*
 
 To get a better understanding of your lab resources and credentials, navigate to the **Environment** tab.
 
-![](../images/terraform-lab-env.png)
+![](../images/terraform-lab-env-new.png)
 
 ### Utilizing the Split Window Feature
 
 For convenience, you can open the lab guide in a separate window by selecting the **Split Window** button from the Top right corner.
 
-![](../images/terraform-lab-split-win.png)
+![](../images/terraform-lab-split-win-new.png)
 
 ### Managing Your Virtual Machine
 
@@ -143,7 +143,9 @@ To adjust the zoom level for the environment page, click the **A↕: 100%** icon
 
 1. If a Welcome to Microsoft Azure pop-up window appears, simply click **Maybe later** to skip the tour.
 
-1. Use the **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"/></inject>** resource group for all Azure resources provisioned during the labs.
+1. Navigate to **Resource Groups** and use the **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"/></inject>** resource group for all Azure resource deployments.
+
+   ![](../images/terraform-lab-iac-rg.png)
 
 ## 📞 Support Contact
 
