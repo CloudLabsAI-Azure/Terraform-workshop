@@ -143,7 +143,7 @@ In this task you will update the Network Interface configuration and apply tags 
 
 In this task you will update the Virtual Machine configuration and apply resource tags.
 
-1. Open the vm.tf and update the configuration:
+1. Open the `vm.tf` and update the configuration:
 
    ```
    # Linux Virtual Machine
@@ -362,7 +362,7 @@ In this task, you will import existing Azure resources into the Terraform state 
    - `azurerm_subnet.predaywebsubnet`
    - `azurerm_network_security_group.predaysg`
    - `azurerm_subnet_network_security_group_association.preday`
-   - `azurerm_virtual_network.predayvnet` (updated with tags)
+   - `azurerm_virtual_network.predayvnet`, `azurerm_network_interface.predaynic` and `azurerm_linux_virtual_machine.predayvm` (updated with tags)
 
 1. Apply the Terraform configuration:
 
@@ -372,14 +372,14 @@ In this task, you will import existing Azure resources into the Terraform state 
 
    ![](../../images/vsc-03-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group and verify:
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify:
    - A new subnet **web** (`10.0.2.0/24`) exists in the VNet.
-   - A new NSG **web-nsg** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
+   - A new NSG **web-nsg-<inject key="Deployment-ID" enableCopy="false"></inject>** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
    - The NSG is associated with the **web** subnet.
 
-   ![](../../images/03-azure-resources-nsg.png)
+   ![](../../images/03-azure-resources-nsg-new.png)
 
-   ![](../../images/03-azure-resources-subnet-nsg-association.png)
+   ![](../../images/03-azure-resources-subnet-nsg-association-new.png)
    
 ---
 
