@@ -37,9 +37,8 @@ In this task, you will prepare the local development environment required for Te
 1. In VS Code, ensure that the following extensions are installed:
    
    - [HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) — syntax highlighting, validation, and IntelliSense for `.tf` files.
-   - [Microsoft Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) — push files to Azure Cloud Shell.
   
-   ![](../../images/vsc-terraform-lab-extensions.png)
+   ![](../../images/vsc-terraform-lab-hashicorp-ext.png)
 
 1. From the **File** menu in VS Code, choose **Open Folder**.
 
@@ -76,6 +75,8 @@ In this task, you will review the Terraform provider configuration stored in the
 Terraform uses providers as plugins to communicate with cloud platforms and services. The AzureRM provider enables Terraform to create and manage Azure resources.
 
 > 📌 **Note:** The `features {}` block is **required** by the AzureRM provider, even when no features are explicitly configured. Provider versions are pinned inside a `required_providers` block within a `terraform` block.
+>
+> 📌 **Note:** You will see a similar **`provider.tf`** configuration used consistently across all five lab folders throughout this workshop.
 
 1. In VS Code, open the **Terraform/01 - Basics/Code** folder in the **TerraformLabs** directory.
 
@@ -242,7 +243,7 @@ You will use the following Terraform commands through the labs:
 
    ![](../../images/az-no-this-app-only.png)
 
-1. You are now signed in to the Azure portal from your Visual Studio Code terminal. When prompted to select a subscription and tenant, press **Enter** to accept the default selection.
+1. You are now signed in to the Azure portal from your Visual Studio Code terminal. In Visual Studio Code integrated terminal, when prompted to select a subscription and tenant, press **Enter** to accept the default selection.
 
    ![](../../images/az-select-subs-enter-01.png)
 
@@ -294,9 +295,9 @@ You will use the following Terraform commands through the labs:
 
    ![](../../images/vsc-01-terraform-apply-01.png)
 
-1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID"></inject> resource group — you should see **tfpreday-vnet-<inject key="Deployment-ID"></inject>** Virtual Network with subnet **subnet1**.
+1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group, you should see **tfpreday-vnet-<inject key="Deployment-ID" enableCopy="false"></inject>** Virtual Network with subnet **subnet1**.
 
-   ![](../../images/01-azure-vnet-subnet-01.png)
+   ![](../../images/01-azure-vnet-subnet-new.png)
 
    > 📌 **Note:** Terraform is **idempotent**. Running terraform plan again after deployment should return - **No changes. Infrastructure is up-to-date.**
 
