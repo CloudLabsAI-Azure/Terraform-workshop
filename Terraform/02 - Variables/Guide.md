@@ -246,9 +246,9 @@ In this task, you will initialize the Terraform working directory, generate an e
 
    ![](../../images/vsc-02-terraform-apply-01.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your resource group and confirm VM, OS Disk and NIC resources were created.
+1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and confirm **Virtual Machine**, **Disk** and **Network Interface** resources were created.
 
-   ![](../../images/02-azure-resources-01.png)
+   ![](../../images/02-azure-resources-new.png)
 
 ---
 
