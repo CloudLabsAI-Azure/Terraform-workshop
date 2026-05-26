@@ -242,7 +242,7 @@ In this task you will deploy the Key Vault access policy and secret.
 
    ![](../../images/vsc-terraform-04-security-code-1-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group → **keyvault-<inject key="Deployment-ID" enableCopy="false"></inject>** → **Secrets** → confirm that **lab04admin** has been created.
+1. In the Azure portal, navigate to your **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject>** resource group → **keyvault-<inject key="Deployment-ID" enableCopy="false"></inject>** → **Secrets** → confirm that **lab04admin** has been created.
 
    ![](../../images/04-azure-resources-key-vault-secret-new.png)
 
@@ -258,7 +258,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
    ![](../../images/vsc-terraform-04-security-code-part-2.png)
 
-1. Open the `vnet.tf` and update the network configuration:
+1. Open the **`vnet.tf`** and update the network configuration:
 
    ```
    # Virtual Network
@@ -311,7 +311,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
    ![](../../images/vsc-terraform-04-security-code-2-vnet-tf.png)
 
-1. Open the `nic.tf` and update the network configuration:
+1. Open the **`nic.tf`** and update the network configuration:
 
    ```
    # Network Interface
@@ -332,7 +332,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
    ![](../../images/vsc-terraform-04-security-code-2-nic-tf.png)
 
-1. Open the `vm.tf` and update the configuration to retrieve the password from Key Vault:
+1. Open the **`vm.tf`** and update the configuration to retrieve the password from Key Vault:
 
    ```terraform
    # Reference the Key Vault instance from Part 1
@@ -384,7 +384,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
    | `data "azurerm_key_vault_secret"` | Retrieves the stored secret value |
    | `admin_password = data.azurerm_key_vault_secret.tf_preday.value` | Dynamically injects the secret during deployment |
 
-1. Open the `variables.tf` ensure the following variables are present:
+1. Open the **`variables.tf`** ensure the following variables are present:
 
    ```terraform
    variable "rg" {
@@ -432,7 +432,7 @@ In this task you will modify the VM deployment to retrieve the administrator pas
 
    ![](../../images/vsc-terraform-04-security-code-2-variables-tf.png)
 
-1. Open the `terraform.tfvars` and update the values:
+1. Open the **`terraform.tfvars`** and update the values:
 
    ```terraform
    rg       = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"  # Enter your target resource group name
@@ -558,7 +558,7 @@ In this task you will import the existing resources into Terraform state and dep
 
    ![](../../images/vsc-terraform-04-security-code-2-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify that the **default-nsg-<inject key="Deployment-ID" enableCopy="false"></inject>** Network Security Group is created and is associated to the **subnet1**.
+1. In the Azure portal, navigate to your **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject>** resource group and verify that the **default-nsg-<inject key="Deployment-ID" enableCopy="false"></inject>** Network Security Group is created and is associated to the **subnet1**.
 
    ![](../../images/04-azure-resources-nsg-new.png)
 

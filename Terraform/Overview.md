@@ -83,13 +83,13 @@ In the final lab, you will refactor the infrastructure into reusable Terraform m
 
 ## 🚀 Getting Started with Lab
 
-Welcome to your Infrastructure as Code with Terraform Workshop! We've prepared a seamless environment for you to migrate and modernize the iconic Spring Boot PetClinic application from local execution to Azure Kubernetes Service (AKS). You'll experience the complete modernization journey using AI-powered tools such as GitHub Copilot app modernization and Containerization Assist MCP Server. Let's begin by making the most of this experience.
+Welcome to your Infrastructure as Code with Terraform Workshop! We've prepared a seamless environment for you to explore Terraform concepts, deploy Azure infrastructure resources, and gain hands-on experience with modern Infrastructure as Code practices.
 
 ### Accessing Your Lab Environment
 
 Once you're ready to dive in, your virtual machine and lab guide will be right at your fingertips within your web browser.
 
-![](../images/terraform-lab-guide.png)
+![](../images/terraform-lab-guide-new.png)
 
 ### Virtual Machine & Lab Guide
 
@@ -103,7 +103,7 @@ To get a better understanding of your lab resources and credentials, navigate to
 
 ### Utilizing the Split Window Feature
 
-For convenience, you can open the lab guide in a separate window by selecting the **Split Window** button from the Top right corner.
+For convenience, you can open the lab guide in a separate window by selecting the **Split Window** button from the top right corner.
 
 ![](../images/terraform-lab-split-win-new.png)
 
@@ -115,7 +115,7 @@ Feel free to **Start, Restart, or Stop** your virtual machine as needed from the
 
 ### Lab Guide Zoom In/Zoom Out
 
-To adjust the zoom level for the environment page, click the **A↕: 100%** icon located next to the timer in the lab environment.
+To adjust the zoom level for the environment page, click the **A↕** icon located next to the timer in the lab environment.
 
 ![](../images/terraform-lab-zoom.png)
 

@@ -83,29 +83,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
 
 ## Task 2: Build the reusable module components
 
-1. Open the `providers.tf` file and review the configuration:
-
-   ```terraform
-   terraform {
-     required_providers {
-       azurerm = {
-         source  = "hashicorp/azurerm"
-         version = "~> 4.0"
-       }
-     }
-     required_version = ">= 1.9.0"
-   }
-
-   provider "azurerm" {
-     features {}
-
-     resource_provider_registrations = "none"
-   }
-   ```
-
-   ![](../../images/vsc-terraform-05-reusability-code-providers-tf.png)
-
-1. Open the `modules/azvm/variables.tf` file and review the configuration:
+1. Open the **`modules/azvm/variables.tf`** file and review the configuration:
 
    ```terraform
    variable "rg" {
@@ -177,7 +155,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `secret_id` | Specifies the Key Vault secret name |
    | `tags` | Applies tags across all resources |
 
-1. Open the `modules/azvm/subnet.tf` file and review the configuration:
+1. Open the **`modules/azvm/subnet.tf`** file and review the configuration:
 
    ```terraform
    # Subnet — name is derived from the host_name prefix using the regex() function
@@ -231,7 +209,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
 
    > 📌 **Note:** For `web001`, the `regex()` function returns `web`. For `mysql001`, it returns `mysql`.
    
-1. Open the `modules/azvm/nic.tf` file and review the configuration:
+1. Open the **`modules/azvm/nic.tf`** file and review the configuration:
 
    ```terraform
    resource "azurerm_network_interface" "predaynic" {
@@ -257,7 +235,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `private_ip_address_allocation` | Assigns a dynamic private IP address |
    | `tags` | Applies resource tags |
 
-1. Open the `modules/azvm/vm.tf` file and review the configuration:
+1. Open the **`modules/azvm/vm.tf`** file and review the configuration:
 
    ```terraform
    # Reference the Key Vault instance
@@ -310,7 +288,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
    | `network_interface_ids` | Attaches the NIC to the VM |
    | `admin_password` | Uses the Key Vault secret value securely |
 
-1. Open the `modules/azvm/outputs.tf` file and review the configuration:
+1. Open the **`modules/azvm/outputs.tf`** file and review the configuration:
 
    ```terraform
    output "vm_id" {
@@ -343,7 +321,7 @@ Modules solve this by allowing you to define infrastructure once and reuse it mu
 
 In this task, you will call the same module twice to deploy two independent infrastructure tiers.
 
-1. Open the `main.tf` and update the configuration with the actual values:
+1. Open the **`main.tf`** and update the configuration with the actual values:
 
    ```terraform
    locals {
@@ -373,7 +351,7 @@ In this task, you will call the same module twice to deploy two independent infr
    module "frontend" {
      source = "./modules/azvm"
 
-     host_name   = "web001"
+     host_name   = "web-<inject key="Deployment-ID"></inject>"
      rg          = local.rg
      location    = local.location
      rg2         = local.rg2
@@ -416,7 +394,7 @@ In this task, you will call the same module twice to deploy two independent infr
    module "mysql_db" {
      source = "./modules/azvm"
 
-     host_name   = "mysql001"
+     host_name   = "mysql-<inject key="Deployment-ID"></inject>"
      rg          = local.rg
      location    = local.location
      rg2         = local.rg2
@@ -513,17 +491,17 @@ In this task, you will deploy the reusable infrastructure using Terraform module
 
    ![](../../images/vsc-terraform-05-reusability-code-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify that the following resources are created:
+1. In the Azure portal, navigate to your **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject>** resource group and verify that the following resources are created:
    
    - VNet **tf-reusable-vnet-<inject key="Deployment-ID" enableCopy="false"></inject>** with two subnets: **web** (`172.16.10.0/24`) and **mysql** (`172.16.20.0/24`).
-   - Two NSGs: **nsg-web001** (HTTP/HTTPS rules) and **nsg-mysql001** (MySQL rule).
-   - Two VMs: **web001** and **mysql001**.
+   - Two NSGs: **nsg-web-<inject key="Deployment-ID" enableCopy="false"></inject>** (HTTP/HTTPS rules) and **nsg-mysql-<inject key="Deployment-ID" enableCopy="false"></inject>** (MySQL rule).
+   - Two VMs: **web-<inject key="Deployment-ID" enableCopy="false"></inject>** and **mysql-<inject key="Deployment-ID" enableCopy="false"></inject>**.
 
    ![](../../images/05-azure-resources-2-new-subnet.png)
 
-   ![](../../images/05-azure-resources-2-new-nsg.png)
+   ![](../../images/05-azure-resources-2-new-nsg-new.png)
 
-   ![](../../images/05-azure-resources-2-new-vm.png)
+   ![](../../images/05-azure-resources-2-new-vm-new.png)
 
 ---
 

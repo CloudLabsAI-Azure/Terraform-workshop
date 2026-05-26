@@ -30,7 +30,7 @@ In this task, you will reference the Virtual Network and subnet that were create
 
    ![](../../images/vsc-terraform-02-variables-code.png)
 
-1. Open the `vnet.tf` and update it with the following configuration:
+1. Open the **`vnet.tf`** and update it with the following configuration:
 
    ```terraform
    # Virtual Network created in Lab 01
@@ -131,7 +131,7 @@ In this task, you will configure a Linux Virtual Machine and attach the previous
    }
    ```
 
-   ![](../../images/vsc-terraform-02-variables-code-vm-tf.png)
+   ![](../../images/vsc-terraform-02-variables-code-vm-tf-new.png)
 
    | Configuration | Description |
    |:--------|:-------------|
@@ -188,7 +188,7 @@ In this task, you will define the required Terraform variables and assign enviro
    admin_password = "P@ssw0rd123!"  # Replace with a strong password (â‰¥ 12 chars)
    ```
 
-   ![](../../images/vsc-terraform-02-variables-code-terraform-tfvars.png)
+   ![](../../images/vsc-terraform-02-variables-code-terraform-tfvars-new.png)
 
    > 📌 **Note:** Add `terraform.tfvars` to `.gitignore` to avoid committing credentials or sensitive values to source control.
 
@@ -246,7 +246,7 @@ In this task, you will initialize the Terraform working directory, generate an e
 
    ![](../../images/vsc-02-terraform-apply-01.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and confirm **Virtual Machine**, **Disk** and **Network Interface** resources were created.
+1. In the Azure portal, navigate to your **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject>** resource group and confirm **Virtual Machine**, **Disk** and **Network Interface** resources were created.
 
    ![](../../images/02-azure-resources-new.png)
 

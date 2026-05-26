@@ -82,7 +82,7 @@ Terraform uses providers as plugins to communicate with cloud platforms and serv
 
    ![](../../images/vsc-terraform-01-basics-code.png)
 
-1. Open the `provider.tf` file and review the configuration:
+1. Open the **`provider.tf`** file and review the configuration:
 
    ```terraform
    terraform {
@@ -152,7 +152,7 @@ You will define variables in `variables.tf` and assign values using `terraform.t
    location = "<inject key="Region"></inject>"       # Replace with your Azure region
    ```
 
-   ![](../../images/vsc-terraform-01-basics-code-terraform-tfvars.png)
+   ![](../../images/vsc-terraform-01-basics-code-terraform-tfvars-new.png)
 
    > 📌 **Note:** `terraform.tfvars` is automatically loaded by Terraform at runtime. Never commit secret values to this file — use environment variables or Azure Key Vault for secrets (covered in Lab 04).
 
@@ -295,7 +295,7 @@ You will use the following Terraform commands through the labs:
 
    ![](../../images/vsc-01-terraform-apply-01.png)
 
-1. Verify the deployment in the [Azure portal](https://portal.azure.com) by navigating to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group, you should see **tfpreday-vnet-<inject key="Deployment-ID" enableCopy="false"></inject>** Virtual Network with subnet **subnet1**.
+1. Verify the deployment in the Azure portal by navigating to your **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject>** resource group, you should see **tfpreday-vnet-<inject key="Deployment-ID" enableCopy="false"></inject>** Virtual Network with subnet **subnet1**.
 
    ![](../../images/01-azure-vnet-subnet-new.png)
 
