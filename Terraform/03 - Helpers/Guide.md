@@ -30,7 +30,7 @@ In this task you will add a dedicated web-tier subnet, create a Network Security
 
    ![](../../images/vsc-terraform-03-helpers-code.png)
 
-1. Open the `vnet.tf` and update it with the following configuration:
+1. Open the **`vnet.tf`** and update it with the following configuration:
 
    ```terraform
    # Virtual Network
@@ -110,7 +110,7 @@ In this task you will add a dedicated web-tier subnet, create a Network Security
 
 In this task you will update the Network Interface configuration and apply tags to the resource.
 
-1. Open the `nic.tf` and and update the configuration:
+1. Open the **`nic.tf`** and and update the configuration:
 
    ```
    # Network Interface
@@ -143,7 +143,7 @@ In this task you will update the Network Interface configuration and apply tags 
 
 In this task you will update the Virtual Machine configuration and apply resource tags.
 
-1. Open the `vm.tf` and update the configuration:
+1. Open the **`vm.tf`** and update the configuration:
 
    ```
    # Linux Virtual Machine
@@ -190,7 +190,7 @@ In this task you will update the Virtual Machine configuration and apply resourc
 
 In this task, you will define structured Terraform variables for NSG rules and tags.
 
-1. Open the `variables.tf` and and ensure it contains the following variables:
+1. Open the **`variables.tf`** and and ensure it contains the following variables:
 
    ```terraform
    variable "rg" {
@@ -237,7 +237,7 @@ In this task, you will define structured Terraform variables for NSG rules and t
    | `security_group_rules` | Defines a reusable list of NSG rule objects |
    | `tags` | Stores reusable tags applied across all resources |
 
-1. Open the `terraform.tfvars` and and add the following values:
+1. Open the **`terraform.tfvars`** and and add the following values:
 
    ```terraform
    rg             = "IaC-Terraform-RG-<inject key="Deployment-ID"></inject>"
@@ -353,7 +353,7 @@ In this task, you will import existing Azure resources into the Terraform state 
    Expected output:
 
    ```
-   Plan: 3 to add, 1 to change, 0 to destroy.
+   Plan: 3 to add, 3 to change, 0 to destroy.
    ```
 
    ![](../../images/vsc-03-terraform-plan.png)
@@ -372,7 +372,8 @@ In this task, you will import existing Azure resources into the Terraform state 
 
    ![](../../images/vsc-03-terraform-apply.png)
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject> resource group and verify:
+1. In the Azure portal, navigate to your **IaC-Terraform-RG-<inject key="Deployment-ID" enableCopy="false"></inject>** resource group and verify:
+   
    - A new subnet **web** (`10.0.2.0/24`) exists in the VNet.
    - A new NSG **web-nsg-<inject key="Deployment-ID" enableCopy="false"></inject>** exists with 3 inbound rules: http (Allow 80), https (Allow 443), deny-the-rest (Deny \*).
    - The NSG is associated with the **web** subnet.
