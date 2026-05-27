@@ -1,4 +1,4 @@
-﻿# Lab 05: Reusability — Terraform Modules
+﻿# Lab 05: Reusability - Terraform Modules
 
 ### Estimated Duration: 60 Minutes
 
