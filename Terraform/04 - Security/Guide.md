@@ -1,4 +1,4 @@
-﻿# Lab 04: Security — Secrets Management with Azure Key Vault
+﻿# Lab 04: Security - Secrets Management with Azure Key Vault
 
 ### Estimated Duration: 60 Minutes
 
