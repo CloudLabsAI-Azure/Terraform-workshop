@@ -1,4 +1,4 @@
-# Lab 01: Terraform Basics — Provision an Azure Virtual Network
+# Lab 01: Terraform Basics - Provision an Azure Virtual Network
 
 ### Estimated Duration: 30 Minutes
 
