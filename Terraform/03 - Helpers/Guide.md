@@ -1,4 +1,4 @@
-﻿# Lab 03: Helpers & Iterators — Network Security Groups with Dynamic Rules
+﻿# Lab 03: Helpers & Iterators - Network Security Groups with Dynamic Rules
 
 ### Estimated Duration: 45 Minutes
 
